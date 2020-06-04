@@ -45,4 +45,4 @@ class Bolsa:
      
     def tomar_ficha(self):
         #Toma la primera ficha de la bolsa y la elimina de la misma
-        return self.__fichas.pop()
+        return self.fichas.pop()
