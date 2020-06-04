@@ -41,5 +41,8 @@ class Bolsa:
              random.shuffle(self.fichas)
              
      def cantidad_fichas(self):
-         return (self.fichas)
-      
+          return len(self.__fichas)    
+     
+    def tomar_ficha(self):
+        #Toma la primera ficha de la bolsa y la elimina de la misma
+        return self.__fichas.pop()
