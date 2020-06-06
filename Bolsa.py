@@ -43,6 +43,10 @@ class Bolsa:
      def cantidad_fichas(self):
           return len(self.fichas)    
      
-    def tomar_ficha(self):
+     def tomar_ficha(self):
         #Toma la primera ficha de la bolsa y la elimina de la misma
-        return self.fichas.pop()
+         return self.fichas.pop()
+     
+     def getFichas(self):
+          return self.fichas
+    
