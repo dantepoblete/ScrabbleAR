@@ -16,5 +16,5 @@ class Ficha():
 		return self.__letra
 	
 	def getImage(self):
-		return sefl.__image
+		return self.__image
 
