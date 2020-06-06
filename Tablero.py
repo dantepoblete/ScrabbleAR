@@ -23,7 +23,7 @@ atrilCPU=[sg.Button(image_filename=unknown, image_size=(35,35),pad=(0,0)) for i 
 
 #---------Atril Jugador---------#
 
-atrilJugador=[sg.Button(image_filename=fichas[i].getImage(), image_size=(35,35), pad=(0,0)) for i in range(cantFichas)]
+atrilJugador=[sg.Button(image_filename=fichas[i].getImage(), image_size=(35,35),key=(fichas[i].getLetra(),fichas[i].getValor()), pad=(0,0)) for i in range(cantFichas)]
 
 #---------Ventana---------#
 
