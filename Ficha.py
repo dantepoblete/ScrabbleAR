@@ -7,10 +7,14 @@ class Ficha():
 		for key in letras.keys():
 			if(letra in letras[key]):
 				self.__valor=key
+		self.__image='./letras/'+letra+'.png'		
 	
 	def getValor(self):
 		return self.__valor
 	
 	def getLetra(self):
 		return self.__letra
+	
+	def getImage(self):
+		return sefl.__image
 
