@@ -12,7 +12,6 @@ from Ficha import Ficha
 #---------Valores por defecto---------#
 normal='./img/N.png' #Casilla normal del tablero.
 unknown='./letras/NN.png' #Casillas ocultas del atril de la CPU.
-cantX=cantY=15
 cantFichas=7
 
 #-------------------------------------#
