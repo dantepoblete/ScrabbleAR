@@ -26,9 +26,14 @@ atrilCPU=[sg.Button(image_filename=unknown, image_size=(35,35),pad=(0,0)) for i 
 atrilJugador=[sg.Button(image_filename=fichas[i].getImage(), image_size=(35,35),key=(fichas[i].getLetra(),fichas[i].getValor()), pad=(0,0)) for i in range(cantFichas)]
 
 #---------Ventana---------#
-
-#layout=[[sg.Text('Atril CPU')],atrilCPU,[sg.Text('Tablero')],tablero,[sg.Text('Atril Jugador')],atrilJugador]  ---No puedo añadir el tablero.
-layout=[[sg.Text('Atril CPU')],atrilCPU,[sg.Text('Atril Jugador')],atrilJugador]
+Interfaz=[[sg.Text('Atril CPU ')],
+	   atrilCPU,
+           [sg.Text('Tablero')],
+           [sg.Column(tablero)],
+           [sg.Text('Atril Jugador ')],
+	   atrilJugador
+      ]
+window = sg.Window('Scrabble').Layout(Interfaz) 
 window = sg.Window('ScrabbleAR', layout)
 event,values=window.read()
 window.close()
