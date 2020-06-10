@@ -4,8 +4,6 @@ from Ficha import Ficha
 class Bolsa:   
      def __init__(self):
          self.fichas= []
-         self.inicializar_Bolsa()
-
 
      def agregar_Bolsa(self,letra,cantidad):
          for i in range(cantidad):			  
