@@ -56,9 +56,23 @@ def asignarClave(i,j):
 		return 'TP'
 	else:
 		return 'N'
+
+def agregarDescripcion(i,j):
+	if((i,j)in posDobleLetra):
+		return 'Duplica el valor de tu letra'
+	elif((i,j)in posTripleLetra):
+		return 'Triplica el valor de tu letra'
+	elif((i,j)in posDoblePalabra):
+		return 'Duplica el valor de tu palabra'
+	elif((i,j)in posTriplePalabra):
+		return 'Triplica el valor de tu palabra'
+	elif((i,j)in posInicial):
+		return 'Coloca una ficha aqui para comenzar el juego'
+	else:	
+		return None		
 										
 
-tablero=[[sg.Button(image_filename=asignarImagen(i,j), image_size=(30,30), key=asignarClave(i,j), pad=(0,0)) for j in range(cantX)] for i in range(cantY)]
+tablero=[[sg.Button(tooltip=agregarDescripcion(i,j), image_filename=asignarImagen(i,j), image_size=(30,30), key=asignarClave(i,j), pad=(0,0)) for j in range(cantX)] for i in range(cantY)]
 	
 #---------Atril CPU---------#	
 
