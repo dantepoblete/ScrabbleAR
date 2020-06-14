@@ -62,11 +62,11 @@ tablero=[[sg.Button(image_filename=asignarImagen(i,j), image_size=(30,30), key=a
 	
 #---------Atril CPU---------#	
 
-atrilCPU=[sg.Button(image_filename=unknown, image_size=(35,35),pad=(0,0)) for i in range(cantFichas)]
+atrilCPU=[sg.Button(image_filename=unknown, image_size=(30,30),pad=(0,0)) for i in range(cantFichas)]
 
 #---------Atril Jugador---------#
 
-atrilJugador=[sg.Button(image_filename=fichas[i].getImage(), image_size=(35,35),key=(fichas[i].getLetra(),fichas[i].getValor()), pad=(0,0)) for i in range(cantFichas)]
+atrilJugador=[sg.Button(image_filename=fichas[i].getImage(), image_size=(30,30),key=(fichas[i].getLetra(),fichas[i].getValor()), pad=(0,0)) for i in range(cantFichas)]
 
 #---------Ventana---------#
 Interfaz=[[sg.Text('Atril CPU ')],
