@@ -91,6 +91,6 @@ Interfaz=[[sg.Text('Atril CPU ')],
 	   atrilJugador
       ]
 window = sg.Window('Scrabble').Layout(Interfaz) 
-event,values=window.read()
-window.close()
+event,values=window.Read()
+window.Close()
 	
