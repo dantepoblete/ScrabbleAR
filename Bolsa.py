@@ -48,6 +48,6 @@ class Bolsa:
          #Toma la primera ficha de la bolsa y la elimina de la misma
          return self.fichas.pop()
      
-    def getFichas(self):
+     def getFichas(self):
          return self.fichas
     
