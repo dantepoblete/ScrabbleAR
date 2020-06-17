@@ -16,7 +16,7 @@ unknown='./letras/NN.png' #Casillas ocultas del atril de la CPU.
 cantX=cantY=15
 cantFichas=7
 
-letras=['A','B','C','D','E','F','G','H','I','J','K','LL','M','N','O','P','Q','R','RR','S','T','U','V','W','X','Y','Z']
+letras=['A','B','C','D','E','F','G','H','I','J','K','L','LL','M','N','O','P','Q','R','RR','S','T','U','V','W','X','Y','Z']
 
 #---------Posicion de los casilleros especiales---------#
 
