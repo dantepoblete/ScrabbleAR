@@ -7,29 +7,21 @@ verb=[ "VAG", "VBG", "VAI","VAN", "MD", "VAS" , "VMG" , "VMI", "VB", "VMM" ,"VMN
 
 def clasificar(palabra):
     pal = parse(palabra).split()
-    if pal[0][0][1] in sus or adj or verb:
-        esValida=True
+    if pal in sus or adj or verb:
+         return True
     else:
-        esValida=False   
-    return esValida
-	
+        return False   
+   
 	
 def palabra_Valida(palabra):
-     if(((len(palabra))>=2) and ((len(palabra))<=7)) :
+    if(((len(palabra))>=2) and ((len(palabra))<=7)) :
          palabra=palabra.lower()
-         if (not palabra in spelling):
-             if (not palabra in lexicon):
-	             esValida=False
-	             return esValida  
-             else:
-                 esValida=clasificar(palabra)
-                 print(esValida)     
-                 return esValida    
-         else:
-	         esValida= clasificar(palabra)
-	         print(esValida)
-	         return esValida
+         if (palabra in spelling):
+             return True
+         elif(palabra in lexicon):
+             return True
      else:
          return False        
+  
 
   
