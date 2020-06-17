@@ -106,8 +106,6 @@ while True:
 				tabla.actualizarCasilla(event[0],event[1],aux.getLetra(),aux.getValor()) #Actualizo los valores del BackEnd del tablero
 				window[clave].update(visible=False)  #Borro la ficha del atril
 				aux=None #Reseteo aux
-			elif(aux==None):
-				pass
 		elif(event[0] in letras):
 			aux=Ficha(event[0]) #Si se clickeo una ficha del atril, inicializo el objeto con su letra correspondiente
 			clave=event	#Guardo la clave de la ficha
