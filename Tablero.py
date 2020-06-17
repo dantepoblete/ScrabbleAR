@@ -36,8 +36,6 @@ tabla=BackEnd()
 
 #---------Tablero---------#
 
-claves=['DL','TL','DP','TP','N']
-
 def asignarImagen(i,j):
 	if((i,j)in posDobleLetra):
 		return dobleLetra
@@ -51,18 +49,6 @@ def asignarImagen(i,j):
 		return inicio
 	else:
 		return normal	
-
-def asignarClave(i,j):
-	if((i,j)in posDobleLetra):
-		return claves[0]
-	elif((i,j)in posTripleLetra):
-		return claves[1]
-	elif((i,j)in posDoblePalabra):
-		return claves[2]
-	elif((i,j)in posTriplePalabra):
-		return claves[3]
-	else:
-		return claves[4]
 		
 def agregarDescripcion(i,j):
 	if((i,j)in posDobleLetra):
