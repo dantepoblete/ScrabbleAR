@@ -87,16 +87,14 @@ while True:
 	try:
 		event,values=window.Read()
 		if(event[0] in range(15)):
-			if((tabla.comprobarCasilla(event[0],event[1]))==True)and(aux!=None): #Compruebo si la casilla esta disponible y si aux esta inicializado
-				window[event].update(image_filename=aux.getImage()) #Actualizo la imagen de la casilla
-				tabla.actualizarCasilla(event[0],event[1],aux.getLetra(),aux.getValor()) #Actualizo los valores del BackEnd del tablero
+			if((tabla.comprobarCasilla(event[0],event[1]))==True)and(clave!=None):
+				tabla.actualizarCasilla(event[0],event[1],clave[0],clave[1])
+				window[event].update(image_filename=tabla.getImagenAct(event[0],event[1])) #Actualizo la imagen de la casilla
 				window[clave].update(visible=False)  #Borro la ficha del atril
-				aux=None #Reseteo aux
+				clave=None #Reseteo aux
 		elif(event[0] in letras):
-			aux=Ficha(event[0]) #Si se clickeo una ficha del atril, inicializo el objeto con su letra correspondiente
 			clave=event	#Guardo la clave de la ficha
 	except(NameError):
 		#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
-		pass		
-
+		pass	
 window.Close()
