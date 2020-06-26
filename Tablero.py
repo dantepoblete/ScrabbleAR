@@ -11,10 +11,8 @@ dobleLetra='./img/DL.png'
 tripleLetra='./img/TL.png'
 doblePalabra='./img/DP.png'
 triplePalabra='./img/TP.png'
-unknown='./letras/NN.png' #Casillas ocultas del atril de la CPU.
 
 cantX=cantY=15
-cantFichas=7
 
 letras=['A','B','C','D','E','F','G','H','I','J','K','L','LL','M','N','O','P','Q','R','RR','S','T','U','V','W','X','Y','Z']
 
@@ -28,9 +26,7 @@ posInicial=[(7,7)]
 
 #-------------------------------------#
 
-bolsa=Bolsa()
-bolsa.inicializar_Bolsa()
-fichas=bolsa.getFichas()
+
 
 tabla=BackEnd()
 
@@ -68,20 +64,19 @@ def agregarDescripcion(i,j):
 tablero=[[sg.Button(tooltip=agregarDescripcion(i,j), image_filename=asignarImagen(i,j), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(cantX)] for i in range(cantY)]
 	
 #---------Atril CPU---------#	
-
-atrilCPU=[sg.Button(image_filename=unknown, image_size=(30,30),pad=(0,0)) for i in range(cantFichas)]
+atrilCPU=Atril()
 
 #---------Atril Jugador---------#
-
-atrilJugador=[sg.Button(image_filename=fichas[i].getImage(), image_size=(30,30),key=(fichas[i].getLetra(),fichas[i].getValor(),i), pad=(0,0)) for i in range(cantFichas)]
+atrilJugador=Atril()
 
 #---------Ventana---------#
 Interfaz=[[sg.Text('Atril CPU ')],
-		atrilCPU,
-           [sg.Column(tablero)],
-           [sg.Text('Atril Jugador ')],
-		atrilJugador
-      ]
+	  atrilCPU.get_atril_Cpu((),
+          [sg.Column(tablero)],
+          [sg.Text('Atril Jugador ')],
+	  atrilJugador.get_atril_Jugador()
+         ]
+
 window = sg.Window('Scrabble').Layout(Interfaz)
 while True:
 	try:
