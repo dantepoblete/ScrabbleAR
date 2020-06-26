@@ -10,7 +10,6 @@ class BackEnd():
 		4-Disponibilidad del casillero(True si esta libre y False en caso contrario,
 		 al estar vacio el tablero, se inicializa en True).'''
 		self.__backEnd=[[Casillero(i,j) for i in range(15)] for j in range(15)]
-		self.__ocupados=0
 		
 	def getEstado(self,i,j):
 		'''Devuelve el estado de la casilla ubicada en la posición [i][j]'''
@@ -22,17 +21,12 @@ class BackEnd():
 		self.__backEnd[i][j].setValor(valor)
 		self.__backEnd[i][j].setEstado(False)
 		self.__backEnd[i][j].setImagen(letra)
-		self.__ocupados=self.__ocupados+1
 
-	def getCasillasOcupadas(self):
-		'''Devuelve la cantidad de casilleros ocupados del tablero.'''
-		return self.__ocupados
+	def getCasilla(self,i,j):
+		return self.__backEnd[i][j]
 		
-	def getImagenAct(self,i,j):
-		return self.__backEnd[i][j].getImagenAct()	
-		
-	def getImagenAnt(self,i,j):
-		return self.__backEnd[i][j].getImagenAnt()
+	def getImagen(self,i,j):
+		return self.__backEnd[i][j].getImagen()	
 		
 	def getValor(self,i,j):
 		return self.__backEnd[i][j].getValor()
@@ -40,12 +34,10 @@ class BackEnd():
 	def getLetra(self,i,j):
 		return self.__backEnd[i][j].getLetra()			
 
-	def comprobarCasilla(self,i,j):
-		'''Comprueba que la primer ficha del juego sea colocada en el casillero principal, si ya fue colocada
-		solamente devuelve el estado de la casilla solicitada.'''
-		if(self.getCasillasOcupadas()==0)and(i!=7)and(j!=7):
-			return False
-		elif(self.getCasillasOcupadas()==0)and(i==7)and(j==7):
-			return True	
-		elif(self.getCasillasOcupadas()!=0):
-		    return self.getEstado(i,j)
+	def restaurarCasillero(self,i,j):
+		'''La ficha es retirada del casillero'''
+		self.__backEnd[i][j].setLetra('')
+		self.__backEnd[i][j].setValor(0)
+		self.__backEnd[i][j].setEstado(True)
+		self.__backEnd[i][j].restoreImagen()
+		
