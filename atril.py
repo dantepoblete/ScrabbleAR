@@ -1,6 +1,9 @@
 from Bolsa import Bolsa
 import PySimpleGUI as sg
 
+#---------Ubicacion de imagen---------#
+unknown='./letras/NN.png' #Casillas ocultas del atril de la CPU.
+
 class Atril:
     
     def __init__(self):
