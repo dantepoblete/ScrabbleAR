@@ -111,6 +111,7 @@ window = sg.Window('Scrabble').Layout(Interfaz)
 while True:
 	try:
 		event,values=window.Read()
+		print(event)
 		if(event[0] in range(15)):
 			#Si todavia no fue puesta ninguna ficha trabajo con el casillero principal
 			if(fichasUsadas == 0)and(event[0] == 7)and(event[1] == 7)and(clave!=None):
@@ -141,12 +142,11 @@ while True:
 			print(word)
 			if(word in palabras):
 				print('felicidades')
-				pala
 				for letra in palabra:
 					#clave corresponde a la variable clave del atril
 					clave=(letra.getLetra(),letra.getValor())
 					#Si la palabra fue correcta por cada letra de la palabra actualizo las fichas utilizadas y las hago aparecer en el atril
-					window[clave].update(image_filename=fichas[8].getImage(), image_size=(30,30),key=(fichas[8].getLetra(),fichas[8].getValor()), pad=(0,0))
+					window[clave].update(image_filename=fichas[8].getImage())
 					window[clave].update(visible=True)			
 			else:
 				#Guardo la posicion de cada casillero
@@ -156,9 +156,12 @@ while True:
 					window[clave].update(visible=True)
 					pos.append(letra.getPos())
 				for event in pos:
-					tabla.restaurarCasillero(event[0],event[1])	
-					window[event].update(image_filename=tabla.getImagen(event[0],event[1]))	
+					tabla.restaurarCasillero(event[0],event[1])
+					window[event].update(image_filename=tabla.getImagen(event[0],event[1]))
+				fichasUsadas=0
+				posSiguiente=[]
+				palabra=[]		
 	except(NameError):
 		#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
-		pass	
+		pass
 window.Close()
