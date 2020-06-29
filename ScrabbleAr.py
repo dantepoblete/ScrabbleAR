@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+import Juego as Game
 import webbrowser
 
 sg.change_look_and_feel('LightBlue')
@@ -21,7 +22,8 @@ def main(args):
 	while True:
 		event,values = menu.Read()
 		if event == '-play-':
-			pass
+			sg.change_look_and_feel('DarkBlue2')	#DarkTeal17
+			Game.main()
 		elif event == '-exit-':
 			break
 		elif event == '-info-':
