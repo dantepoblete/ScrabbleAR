@@ -77,7 +77,28 @@ def main():
 		tabla.actualizarCasilla(event[0],event[1],ficha.getLetra(),ficha.getValor())
 		window[event].update(image_filename=tabla.getImagen(event[0],event[1]))
 		window[clave].update(visible=False)
-	
+		
+	def calcularPuntaje(palabra):
+		total = 0
+		DP = False
+		TP = False
+		for letra in palabra:
+			valor=letra.getValor()
+			tipo=letra.getTipo()
+			if(tipo == 'DL'):
+				valor = valor * 2
+			elif(tipo == 'TL'):
+				valor = valor * 3		
+			elif(tipo == 'DP'):
+				DP = True
+			elif(tipo == 'TP'):
+				TP = True
+			total = total + valor
+		if(DP == True):
+			total = total * 2
+		if(TP == True):
+			total = total * 3
+		return total	
 	
 	niveles= [[sg.Button('Facil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-facil-'))],
           	  [sg.Button('Medio',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-medio-'))]	,
@@ -128,7 +149,6 @@ def main():
 	
 	while True:
 		if(turno == 'Jugador'):
-			print('Turno del Jugador')
 			try:
 				event,values= window.Read()
 				if(type(event) == tuple):
@@ -182,6 +202,7 @@ def main():
 					print(word)
 					if(palabra_Valida(word,nivel)):
 						atrilJugador.completarAtril(posFichas)
+						print(calcularPuntaje(palabra))
 						for i in posFichas:
 							window[i].update(image_filename=atrilJugador.getImagen(i))
 							window[i].update(visible=True)
