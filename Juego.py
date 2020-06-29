@@ -16,9 +16,6 @@ doblePalabra='./img/DP.png'
 triplePalabra='./img/TP.png'
 unknown='./letras/NN.png' #Casillas ocultas del atril de la CPU.
 
-palabras = ['jo','mo','ma','ana','al','ol','na','no'] #palabras de prueba
-
-
 #---------Posicion de los casilleros especiales---------#
 
 posDobleLetra=[(2,2),(4,4),(6,6),(2,12),(4,10),(6,8),(8,6),(10,4),(12,2),(8,8),(10,10),(12,12),(12,6),(12,8)]
@@ -166,15 +163,12 @@ def main():
 						word=word+letra.getLetra().lower()
 						pos.append(letra.getPos())	
 					print(word)
-					if(word in palabras):
+					if(word in palabras):#Cambiar a si la palabra es valida con pattern
 						atrilJugador.completarAtril(posFichas)
 						for i in posFichas:
 							window[i].update(image_filename=atrilJugador.getImagen(i))
 							window[i].update(visible=True)
 						acertadas = acertadas + 1
-						palabra = []
-						posSiguiente = []	
-						posFichas=[]
 						turno = 'CPU'				
 					else:
 						for i in posFichas:
@@ -183,9 +177,9 @@ def main():
 							tabla.restaurarCasillero(event[0],event[1])
 							window[event].update(image_filename=tabla.getImagen(event[0],event[1]))
 						fichasUsadas = fichasUsadas - len(palabra)
-						posSiguiente = []
-						palabra = []
-						posFichas=[]
+					posSiguiente = []
+					palabra = []
+					posFichas=[]
 				elif(event == None,'Exit'):
 					break		
 			except(NameError):
