@@ -13,7 +13,7 @@ def main(args):
 			  [sg.Button('Puntuaciones',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-scores-'))],
 			  [sg.Button('Salir',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-exit-'))]
 			  ]
-	information = [sg.Button(image_filename='./img/INFO.png', image_size=(30,30),tooltip='Mas información.', button_color=('white',background), border_width=0, key=('-info-')),sg.Text(7*('	')+'Grupo 14')]		  
+	information = [sg.Button(image_filename='./img/INFO.png', image_size=(30,30),tooltip='Mas información.', button_color=('white',background), border_width=0, key=('-info-')),sg.Text(7*('	')+'Grupo 15')]		  
 			  
 	panel = [title,[sg.Column(options,justification = "center")],information]		  
 
