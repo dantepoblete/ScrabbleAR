@@ -63,6 +63,9 @@ class Casillero():
 		
 	def getImagen(self):
 		return self.__imagenAct
+		
+	def getTipo(self):
+		return self.__tipo	
 	
 	def restoreImagen(self):
 		self.__imagenAct=self.__imagenAnt
