@@ -78,6 +78,23 @@ def main():
 		window[event].update(image_filename=tabla.getImagen(event[0],event[1]))
 		window[clave].update(visible=False)
 	
+	
+	niveles= [[sg.Button('Facil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-facil-'))],
+          	  [sg.Button('Medio',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-medio-'))]	,
+		  [sg.Button('Dificil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-dificl-'))]
+		 ] 
+
+	Dificultad = sg.Window('Dificultades', niveles)
+	sg.popup('Elige un nivel de dificultad')
+	event,values= Dificultad.Read()	
+	if(event == 'facil'):
+		nivel='facil'
+	elif (event=='medio'):
+         	nivel='medio'
+	else:		
+		nivel='dificil'		
+	Dificultad.close()
+	
 	turno=random.choice(['CPU','Jugador'])
 	acertadas = 0
 	fichasUsadas = 0
@@ -163,7 +180,7 @@ def main():
 						word=word+letra.getLetra().lower()
 						pos.append(letra.getPos())	
 					print(word)
-					if(word in palabras):#Cambiar a si la palabra es valida con pattern
+					if(palabra_Valida(word,nivel)):
 						atrilJugador.completarAtril(posFichas)
 						for i in posFichas:
 							window[i].update(image_filename=atrilJugador.getImagen(i))
