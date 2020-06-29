@@ -1,0 +1,27 @@
+from Bolsa import Bolsa
+
+class Atril:
+	def __init__(self):
+		self.__bolsa = Bolsa()
+		self.__bolsa.inicializar_Bolsa()
+		self.__listaFichas = []
+        
+	def inicializarAtril(self):
+		for i in range(7):
+			self.__listaFichas.append(self.__bolsa.tomar_ficha())
+	
+	def completarAtril(self,pos):
+		for i in pos:
+			self.__listaFichas[i] = self.__bolsa.tomar_ficha()
+			
+	def getImagen(self,i):
+		return self.__listaFichas[i].getImage()
+		
+	def getLetra(self,i):
+		return self.__listaFichas[i].getLetra()
+		
+	def getValor(self,i):
+		return self.__listaFichas[i].getValor()
+
+	def getFicha(self,i):
+		return self.__listaFichas[i]
