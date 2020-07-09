@@ -69,7 +69,7 @@ def definirOrientacion(event,posActual):
 	elif(event[1] == posActual[1] + 1):
 		horizontal = [(event[0],event[1] + 1)]
 		return horizontal
-
+	
 
 def main():
 	
@@ -77,6 +77,32 @@ def main():
 		tabla.actualizarCasilla(event[0],event[1],ficha.getLetra(),ficha.getValor())
 		window[event].update(image_filename=tabla.getImagen(event[0],event[1]))
 		window[clave].update(visible=False)
+		
+	def horizontal(pos,palabra):
+		ok = True
+		i = pos[0]
+		j = pos[1]
+		if(j+len(palabra)>14):
+			ok = False
+		else:	
+			for letra in palabra:
+				if(tabla.getEstado(i,j) == False):
+					ok = False
+				j+=1
+		return ok	
+		
+	def vertical(pos,palabra):
+		ok = True
+		i = pos[0]
+		j = pos[1]
+		if(i+len(palabra)>14):
+			ok = False
+		else:	
+			for letra in palabra:
+				if(tabla.getEstado(i,j) == False):
+					ok = False
+				i+=1
+		return ok	
 		
 	def calcularPuntaje(palabra):
 		total = 0
@@ -148,9 +174,10 @@ def main():
 		sg.popup('Empieza el Jugador')
 	
 	while True:
+		print(turno)
 		if(turno == 'Jugador'):
+			event,values= window.Read()
 			try:
-				event,values= window.Read()
 				if(type(event) == tuple):
 					#Si todavia no fue puesta ninguna ficha trabajo con el casillero principal
 					if(fichasUsadas == 0)and(event[0] == 7)and(event[1] == 7)and(clave!=None):
@@ -218,14 +245,79 @@ def main():
 					posSiguiente = []
 					palabra = []
 					posFichas=[]
-				elif(event == None,'Exit'):
-					break		
+				elif(event =='cambiar'):
+					turno='CPU'			
 			except(NameError):
 			#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
 				pass
 		elif(turno == 'CPU'):
-			print('Turno del CPU')
-			turno = 'Jugador'
+			window.Finalize()
+			palabras=[]
+			datos=[]
+			valida=None
+			cant=random.randint(2,7)#La palabra valida debe ser minimo de dos letras por lo que para cada turno genero una longitud de palabra fija de entre 2 y 7 letras
+			for i in range(100):#Por cada turno genero 100 posibles combinaciones con las fichas disponibles
+				fichas=[0,1,2,3,4,5,6]#Utilizo una lista con las posiciones de las fichas del atril para controlar su uso
+				combinacion=[]#Inicializo una lista que guarde la combinacion generada de las fichas en cada iteracion de las 100
+				for j in range(cant):#Itero tantas veces como letras deba tener la palabra
+					pos=random.choice(fichas)#Elijo una ficha al azar del atril
+					fichas.remove(pos)#Elimino la posibilidad de elegir la misma ficha en la proxima iteracion.
+					combinacion.append(atrilCPU.getFicha(pos))#Agrego la ficha seleccionada a la lista de combinacion
+				palabras.append(combinacion)#Una vez generada la combinacion de fichas, la agrego a la lista de palabras generadas
+
+			for combinacion in palabras:#Por cada combinacion de fichas presente en la lista de palabras
+				word=''#Inicializo una cadena que genere la palabra a traves de las fichas combinadas
+				for ficha in combinacion:
+					word=word+ficha.getLetra().lower()#Formo la cadena a partir de la letra correspondiente en cada ficha
+				if(palabra_Valida(word,nivel)):
+					valida=combinacion#Si la palabra generada es valida, guardo la combinacion de fichas en la variable valida.
+			if(valida==None):
+				sg.popup('La CPU pasa de turno')#Si ninguna combinacion genero una palabra valida, paso de turno
+				turno='Jugador'
+			else:
+				if(acertadas==0):#Si el primer turno del juego corresponde a la CPU o aun no hay fichas colocadas en el tablero
+					orientacion = random.choice(['Horizontal','Vertical'])#Elijo la orientacion de la palabra a poner en el atril
+					pos=(7,7)#La posicion inicial es (7,7)
+					for ficha in valida:
+						tabla.actualizarCasilla(pos[0],pos[1],ficha.getLetra(),ficha.getValor())
+						window[pos].update(image_filename=tabla.getImagen(pos[0],pos[1]))
+						datos.append(tabla.getCasilla(pos[0],pos[1]))
+						atrilCPU.quitarFicha(ficha)#Quito la ficha del atril del CPU
+						fichasUsadas+=1	#Aumento la cantidad de fichas utilizadas
+						if(orientacion=='Horizontal'):#Si la posicion elegida fue Horizontal, la sig posicion de la ficha a colocar sera a la derecha.
+							sig=pos[1]+1
+							pos=(pos[0],sig)
+						elif(orientacion == 'Vertical'):#Si la posicion elegida fue Vertical, la sig posicion de la ficha a colocar sera abajo.
+							sig=pos[0]+1
+							pos=(sig,pos[1])
+					atrilCPU.completarAtrilCPU(valida)#Reemplazo las fichas utilizadas por nuevas de la bolsa.
+					print(calcularPuntaje(datos))#Calculo el puntaje de la palabra valida utilizada
+					acertadas+=1	#Aumento en 1 la cantidad de palabras acertadas.
+					turno='Jugador'	#Paso de turno
+				elif(acertadas!=0):
+					pos=random.choice(tabla.getDisponibles())#Elijo una posicion disponible para utilizar en el tablero
+					while(horizontal(pos,valida)==False)and(vertical(pos,valida)==False):	#Si la palabra generada supera los margenes del tablero desde la posicion del tablero, elijo otra
+						pos=random.choice(tabla.getDisponibles())
+					if(vertical(pos,valida)==True):	#Si la palabra puede colocarse en vertical, se elige esa orientacion
+						orientacion='Vertical'
+					elif(horizontal(pos,valida)==True):	#Si la palabra puede colocarse en horizontal, se elige esa orientacion
+						orientacion='Horizontal'
+					for ficha in valida:
+						tabla.actualizarCasilla(pos[0],pos[1],ficha.getLetra(),ficha.getValor())
+						window[pos].update(image_filename=tabla.getImagen(pos[0],pos[1]))
+						datos.append(tabla.getCasilla(pos[0],pos[1]))
+						atrilCPU.quitarFicha(ficha)
+						fichasUsadas+=1
+						if(orientacion=='Horizontal'):
+							sig=pos[1]+1
+							pos=(pos[0],sig)
+						elif(orientacion == 'Vertical'):
+							sig=pos[0]+1
+							pos=(sig,pos[1])
+					atrilCPU.completarAtrilCPU(valida)
+					print(calcularPuntaje(datos))
+					acertadas+=1
+					turno='Jugador'
 	
 	window.Close()
 	
