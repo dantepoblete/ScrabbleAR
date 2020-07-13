@@ -167,27 +167,19 @@ def main():
 	Botones = [[sg.Button('Validar',image_filename='./img/VAL.png',image_size=(120,27),button_color=('white',background),border_width=0, key='val'),
                 sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),button_color=('white',background),border_width=0,key='cambiar')
               ]]
-
-	Interfaz = [[sg.Column(CPU)],[sg.Column(tablero)],[sg.Column(Jugador),sg.Column(Botones)]]          
               
-	'''contadorCPU = [[sg.Text(totalCPU, key='TOT1')]]
-
+	contadorCPU = [[sg.Text(totalCPU, key='TOT1')]]
 	contadorJugador = [[sg.Text(totalJugador, key='TOT2')]]
-
 	venCPU = [[sg.Listbox(values=palabrasCPU, size=(20,5), key='LIS1')]]
-
 	venJugador = [[sg.Listbox(values=palabrasJugador, size=(20,5), key='LIS2')]]
-
 	ven2 = [[sg.Frame('Palabras Acertadas CPU',venCPU)],[sg.Frame('Total Puntos CPU',contadorCPU)]]
-
-	ven = [[sg.Frame('Palabras Acertadas Jugador',venJugador)],[sg.Frame('Total Puntos Jugador',contadorJugador)]]
-
+        ven = [[sg.Frame('Palabras Acertadas Jugador',venJugador)],[sg.Frame('Total Puntos Jugador',contadorJugador)]]
 	posponer = [[sg.Button('Posponer Partida',image_filename='./img/POS.png',image_size=(120,27),button_color=('white',background),border_width=0, key='POS')]]
-
 	logo = [[sg.Button(image_filename = './img/MINI.png', image_size = (160,93), border_width = 0, button_color = ('white',background), key='MINI')]]
 	
-	Interfaz2 = [[sg.Column(logo)],[sg.Column(ven2)],[sg.Column(ven)],[sg.Column(posponer)]]'''
-		
+	datos= [[sg.Column(logo)],[sg.Column(ven2)],[sg.Column(ven)],[sg.Column(posponer)]]
+	Interfaz = [[sg.Column(CPU)],[sg.Column(tablero),sg.Column(datos)],[sg.Column(Jugador),sg.Column(Botones)]]       
+	
 	window = sg.Window('Scrabble').Layout(Interfaz)
 	
 	if(turno == 'CPU'):
