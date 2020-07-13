@@ -126,12 +126,12 @@ def main():
 			total = total * 3
 		return total	
 	
-	niveles= [[sg.Button('Facil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-facil-'))],
+	niveles = [[sg.Button('Facil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-facil-'))],
           	  [sg.Button('Medio',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-medio-'))]	,
-		  [sg.Button('Dificil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-dificl-'))]
-		 ] 
+			  [sg.Button('Dificil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-dificl-'))]
+			  ] 
 
-	Dificultad = sg.Window('Dificultades', niveles)
+	Dificultad = sg.Window('Dificultades', niveles,use_default_focus=False)
 	sg.popup('Elige un nivel de dificultad')
 	event,values= Dificultad.Read()	
 	if(event == 'facil'):
@@ -153,40 +153,56 @@ def main():
 	atrilJugador.inicializarAtril()
 	atrilCPU = Atril()
 	atrilCPU.inicializarAtril()
+	palabrasJugador=[]
+	palabrasCPU=[]
+	totalCPU=0
+	totalJugador=0
 	
 	tablero = [[sg.Button(tooltip=agregarDescripcion(i,j), image_filename=asignarImagen(i,j), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(15)] for i in range(15)]
 	
-	CPU = [[sg.Button(image_filename=unknown, image_size=(30,30),pad=(0,0)) for i in range(7)]]
+	CPU = [[sg.Button(image_filename=unknown, image_size=(30,30),pad=(0,0), key='?') for i in range(7)]]
 	
 	Jugador = [[place(sg.Button(image_filename=atrilJugador.getImagen(i), image_size=(30,30),key = i, pad = (0,0)))for i in range(7)]]
 	
 	Botones = [[sg.Button('Validar',image_filename='./img/VAL.png',image_size=(120,27),button_color=('white',background),border_width=0, key='val'),
                 sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),button_color=('white',background),border_width=0,key='cambiar')
               ]]
+
+	Interfaz = [[sg.Column(CPU)],[sg.Column(tablero)],[sg.Column(Jugador),sg.Column(Botones)]]          
+              
+	'''contadorCPU = [[sg.Text(totalCPU, key='TOT1')]]
+
+	contadorJugador = [[sg.Text(totalJugador, key='TOT2')]]
+
+	venCPU = [[sg.Listbox(values=palabrasCPU, size=(20,5), key='LIS1')]]
+
+	venJugador = [[sg.Listbox(values=palabrasJugador, size=(20,5), key='LIS2')]]
+
+	ven2 = [[sg.Frame('Palabras Acertadas CPU',venCPU)],[sg.Frame('Total Puntos CPU',contadorCPU)]]
+
+	ven = [[sg.Frame('Palabras Acertadas Jugador',venJugador)],[sg.Frame('Total Puntos Jugador',contadorJugador)]]
+
+	posponer = [[sg.Button('Posponer Partida',image_filename='./img/POS.png',image_size=(120,27),button_color=('white',background),border_width=0, key='POS')]]
+
+	logo = [[sg.Button(image_filename = './img/MINI.png', image_size = (160,93), border_width = 0, button_color = ('white',background), key='MINI')]]
 	
-	Interfaz=[[sg.Column(CPU)],[sg.Column(tablero)],[sg.Column(Jugador),sg.Column(Botones)]]
-	
+	Interfaz2 = [[sg.Column(logo)],[sg.Column(ven2)],[sg.Column(ven)],[sg.Column(posponer)]]'''
+		
 	window = sg.Window('Scrabble').Layout(Interfaz)
 	
 	if(turno == 'CPU'):
 		sg.popup('Empieza la CPU')
 	else:
 		sg.popup('Empieza el Jugador')
-	
 	while True:
-		print(turno)
 		if(turno == 'Jugador'):
 			event,values= window.Read()
 			try:
 				if(type(event) == tuple):
-					#Si todavia no fue puesta ninguna ficha trabajo con el casillero principal
 					if(fichasUsadas == 0)and(event[0] == 7)and(event[1] == 7)and(clave!=None):
-						#Guardo como posibles posiciones siguientes el casillero de abajo y el de la derecha
 						posSiguiente.append((8,7))
 						posSiguiente.append((7,8))
-						#Actualizo el casillero con la ficha puesta
 						ponerFicha(event,atrilJugador.getFicha(clave))
-						#Agrego a la lista 'palabra' la informacion del casillero
 						palabra.append(tabla.getCasilla(event[0],event[1]))
 						posFichas.append(clave)
 						clave = None
@@ -229,7 +245,7 @@ def main():
 					print(word)
 					if(palabra_Valida(word,nivel)):
 						atrilJugador.completarAtril(posFichas)
-						print(calcularPuntaje(palabra))
+						totalJugador+=calcularPuntaje(palabra)
 						for i in posFichas:
 							window[i].update(image_filename=atrilJugador.getImagen(i))
 							window[i].update(visible=True)
@@ -264,15 +280,17 @@ def main():
 					fichas.remove(pos)#Elimino la posibilidad de elegir la misma ficha en la proxima iteracion.
 					combinacion.append(atrilCPU.getFicha(pos))#Agrego la ficha seleccionada a la lista de combinacion
 				palabras.append(combinacion)#Una vez generada la combinacion de fichas, la agrego a la lista de palabras generadas
-
-			for combinacion in palabras:#Por cada combinacion de fichas presente en la lista de palabras
-				word=''#Inicializo una cadena que genere la palabra a traves de las fichas combinadas
-				for ficha in combinacion:
-					word=word+ficha.getLetra().lower()#Formo la cadena a partir de la letra correspondiente en cada ficha
+			i=0
+			while(i<=len(palabras)-1)and(valida==None):
+				word=''
+				for ficha in palabras[i]:
+					word+=ficha.getLetra().lower()
 				if(palabra_Valida(word,nivel)):
-					valida=combinacion#Si la palabra generada es valida, guardo la combinacion de fichas en la variable valida.
+					valida=palabras[i]
+				else:
+					i+=1
 			if(valida==None):
-				sg.popup('La CPU pasa de turno')#Si ninguna combinacion genero una palabra valida, paso de turno
+				sg.popup('El oponente pasa de turno')#Si ninguna combinacion genero una palabra valida, paso de turno
 				turno='Jugador'
 			else:
 				if(acertadas==0):#Si el primer turno del juego corresponde a la CPU o aun no hay fichas colocadas en el tablero
@@ -290,18 +308,14 @@ def main():
 						elif(orientacion == 'Vertical'):#Si la posicion elegida fue Vertical, la sig posicion de la ficha a colocar sera abajo.
 							sig=pos[0]+1
 							pos=(sig,pos[1])
-					atrilCPU.completarAtrilCPU(valida)#Reemplazo las fichas utilizadas por nuevas de la bolsa.
-					print(calcularPuntaje(datos))#Calculo el puntaje de la palabra valida utilizada
-					acertadas+=1	#Aumento en 1 la cantidad de palabras acertadas.
-					turno='Jugador'	#Paso de turno
 				elif(acertadas!=0):
 					pos=random.choice(tabla.getDisponibles())#Elijo una posicion disponible para utilizar en el tablero
 					while(horizontal(pos,valida)==False)and(vertical(pos,valida)==False):	#Si la palabra generada supera los margenes del tablero desde la posicion del tablero, elijo otra
 						pos=random.choice(tabla.getDisponibles())
-					if(vertical(pos,valida)==True):	#Si la palabra puede colocarse en vertical, se elige esa orientacion
-						orientacion='Vertical'
-					elif(horizontal(pos,valida)==True):	#Si la palabra puede colocarse en horizontal, se elige esa orientacion
+					if(horizontal(pos,valida)==True):	#Si la palabra puede colocarse en vertical, se elige esa orientacion
 						orientacion='Horizontal'
+					else:	#Si la palabra puede colocarse en horizontal, se elige esa orientacion
+						orientacion='Vertical'
 					for ficha in valida:
 						tabla.actualizarCasilla(pos[0],pos[1],ficha.getLetra(),ficha.getValor())
 						window[pos].update(image_filename=tabla.getImagen(pos[0],pos[1]))
@@ -314,11 +328,11 @@ def main():
 						elif(orientacion == 'Vertical'):
 							sig=pos[0]+1
 							pos=(sig,pos[1])
-					atrilCPU.completarAtrilCPU(valida)
-					print(calcularPuntaje(datos))
-					acertadas+=1
-					turno='Jugador'
-	
+				atrilCPU.completarAtrilCPU(valida)
+				totalCPU+=calcularPuntaje(datos)
+				palabrasCPU.append(word)
+				acertadas+=1
+				turno='Jugador'	
 	window.Close()
 	
 if __name__ == '__main__':
