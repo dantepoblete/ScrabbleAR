@@ -14,6 +14,10 @@ class Atril:
 		for i in pos:
 			self.__listaFichas[i] = self.__bolsa.tomar_ficha()
 			
+	def completarAtrilCPU(self,palabra):
+		for i in palabra:
+			self.__listaFichas.append(self.__bolsa.tomar_ficha())		
+			
 	def getImagen(self,i):
 		return self.__listaFichas[i].getImage()
 		
@@ -25,3 +29,9 @@ class Atril:
 
 	def getFicha(self,i):
 		return self.__listaFichas[i]
+		
+	def getAtril(self):
+		return self.__listaFichas
+		
+	def quitarFicha(self,ficha):
+		self.__listaFichas.remove(ficha)			

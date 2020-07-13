@@ -5,6 +5,7 @@ class BackEnd():
 		'''A partir de la clase Casillero, se genera una matriz ixj que representa al
 		   tablero del juego'''
 		self.__backEnd=[[Casillero(j,i) for i in range(15)] for j in range(15)]
+		self.__disponibles=[(j,i) for i in range(15) for j in range(15)]
 		
 	def getEstado(self,i,j):
 		'''Devuelve el estado de la casilla ubicada en la posición [i][j]'''
@@ -16,6 +17,7 @@ class BackEnd():
 		self.__backEnd[i][j].setValor(valor)
 		self.__backEnd[i][j].setEstado(False)
 		self.__backEnd[i][j].setImagen(letra)
+		self.__disponibles.remove((i,j))
 
 	def getCasilla(self,i,j):
 		'''Devuelve la Casilla ubicada en la posicion (i,j)'''
@@ -37,4 +39,8 @@ class BackEnd():
 		self.__backEnd[i][j].setValor(0)
 		self.__backEnd[i][j].setEstado(True)
 		self.__backEnd[i][j].restoreImagen()
+		self.__disponibles.append((i,j))
+		
+	def getDisponibles(self):
+		return 	self.__disponibles
 		
