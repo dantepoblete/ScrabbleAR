@@ -126,22 +126,21 @@ def main():
 			total = total * 3
 		return total	
 	
-	niveles = [[sg.Button('Facil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-facil-'))],
-          	  [sg.Button('Medio',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-medio-'))]	,
-			  [sg.Button('Dificil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('-dificl-'))]
+	niveles = [[sg.Button('Facil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('facil'))],
+          	  [sg.Button('Medio',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('medio'))]	,
+			  [sg.Button('Dificil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('dificil'))]
 			  ] 
 
 	Dificultad = sg.Window('Dificultades', niveles,use_default_focus=False)
 	sg.popup('Elige un nivel de dificultad')
 	event,values= Dificultad.Read()	
 	if(event == 'facil'):
-		nivel='facil'
+	 	 nivel='facil'
 	elif (event=='medio'):
-         	nivel='medio'
+         nivel='medio'
 	else:		
-		nivel='dificil'		
+		 nivel='dificil'
 	Dificultad.close()
-	
 	turno=random.choice(['CPU','Jugador'])
 	acertadas = 0
 	fichasUsadas = 0
@@ -157,7 +156,14 @@ def main():
 	palabrasCPU=[]
 	totalCPU=0
 	totalJugador=0
-	
+
+	if(nivel=='facil'):
+		cambios=4
+	elif(nivel=='medio'):
+		cambios=3
+	else:
+		cambios=2
+    	
 	tablero = [[sg.Button(tooltip=agregarDescripcion(i,j), image_filename=asignarImagen(i,j), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(15)] for i in range(15)]
 	
 	CPU = [[sg.Button(image_filename=unknown, image_size=(30,30),pad=(0,0), key='?') for i in range(7)]]
@@ -165,7 +171,7 @@ def main():
 	Jugador = [[place(sg.Button(image_filename=atrilJugador.getImagen(i), image_size=(30,30),key = i, pad = (0,0)))for i in range(7)]]
 	
 	Botones = [[sg.Button('Validar',image_filename='./img/VAL.png',image_size=(120,27),button_color=('white',background),border_width=0, key='val'),
-                sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),button_color=('white',background),border_width=0,key='cambiar')
+                sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),button_color=('white',background),border_width=0,key='cambiar',visible=True)
               ]]
               
 	contadorCPU = [[sg.Text(totalCPU, key='TOT1')]]
@@ -173,7 +179,7 @@ def main():
 	venCPU = [[sg.Listbox(values=palabrasCPU, size=(20,5), key='LIS1')]]
 	venJugador = [[sg.Listbox(values=palabrasJugador, size=(20,5), key='LIS2')]]
 	ven2 = [[sg.Frame('Palabras Acertadas CPU',venCPU)],[sg.Frame('Total Puntos CPU',contadorCPU)]]
-        ven = [[sg.Frame('Palabras Acertadas Jugador',venJugador)],[sg.Frame('Total Puntos Jugador',contadorJugador)]]
+	ven = [[sg.Frame('Palabras Acertadas Jugador',venJugador)],[sg.Frame('Total Puntos Jugador',contadorJugador)]]
 	posponer = [[sg.Button('Posponer Partida',image_filename='./img/POS.png',image_size=(120,27),button_color=('white',background),border_width=0, key='POS')]]
 	logo = [[sg.Button(image_filename = './img/MINI.png', image_size = (160,93), border_width = 0, button_color = ('white',background), key='MINI')]]
 	
@@ -254,7 +260,26 @@ def main():
 					palabra = []
 					posFichas=[]
 				elif(event =='cambiar'):
-					turno='CPU'			
+					sg.popup('Seleccione las teclas a cambiar,confirme con el boton Cambiar Fichas')
+					elegidas=[]
+					ok=True
+					while(ok == True):
+						clave,values=window.read()
+						if(type(clave) == int):
+							if(clave in elegidas): #Si el jugador ya eligio esa ficha del atril
+								sg.popup('Ya se agrego')
+							else:
+           						 elegidas.append(clave)
+						elif(clave=='cambiar'):
+							 ok=False							
+					atrilJugador.cambiarFichas(elegidas)
+					for i in elegidas:
+						window[i].update(image_filename=atrilJugador.getImagen(i))
+						window[i].update(visible=True)	
+					cambios=cambios-1
+					if(cambios == 0): #Si el jugador se queda sin cambios de fichas
+						window.FindElement('cambiar').Update(visible=False)	
+					turno='CPU'	 
 			except(NameError):
 			#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
 				pass
@@ -329,3 +354,4 @@ def main():
 	
 if __name__ == '__main__':
     main()				
+
