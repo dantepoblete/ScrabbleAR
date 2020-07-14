@@ -34,4 +34,8 @@ class Atril:
 		return self.__listaFichas
 		
 	def quitarFicha(self,ficha):
-		self.__listaFichas.remove(ficha)			
+		self.__listaFichas.remove(ficha)	
+	
+	def CambiarFichas(self,fichas):
+		self.completarAtril(fichas)     
+
