@@ -6,15 +6,6 @@ import random
 
 background = sg.LOOK_AND_FEEL_TABLE['DarkBlue2']['BACKGROUND']
 
-#---------Ubicacion de las imagenes---------#
-
-inicio='./img/IN.png'
-normal='./img/N.png' #Casilla normal del tablero.
-dobleLetra='./img/DL.png'
-tripleLetra='./img/TL.png'
-doblePalabra='./img/DP.png'
-triplePalabra='./img/TP.png'
-unknown='./letras/NN.png' #Casillas ocultas del atril de la CPU.
 
 #---------Posicion de los casilleros especiales---------#
 
@@ -28,17 +19,17 @@ posInicial=[(7,7)]
 
 def asignarImagen(i,j):
 	if((i,j)in posDobleLetra):
-		return dobleLetra
+		return './img/DL.png'
 	elif((i,j)in posTripleLetra):
-		return tripleLetra
+		return './img/TL.png'
 	elif((i,j)in posDoblePalabra):
-		return doblePalabra
+		return './img/DP.png'
 	elif((i,j)in posTriplePalabra):
-		return triplePalabra		
-	elif((i,j)in posInicial):
-		return inicio
+		return './img/TP.png'		
+	elif((i,j) == (7,7)):
+		return './img/IN.png'
 	else:
-		return normal	
+		return './img/N.png'	
 		
 def agregarDescripcion(i,j):
 	if((i,j)in posDobleLetra):
@@ -49,7 +40,7 @@ def agregarDescripcion(i,j):
 		return 'Duplica el valor de tu palabra'
 	elif((i,j)in posTriplePalabra):
 		return 'Triplca el valor de tu palabra'
-	elif((i,j)in posInicial):
+	elif((i,j) == (7,7)):
 		return 'Coloca una ficha aqui para comenzar el juego'
 	else:	
 		return None
@@ -69,8 +60,8 @@ def definirOrientacion(event,posActual):
 	elif(event[1] == posActual[1] + 1):
 		horizontal = [(event[0],event[1] + 1)]
 		return horizontal
-	
-
+		
+		
 def main():
 	
 	def ponerFicha(event,ficha):
@@ -163,27 +154,30 @@ def main():
 		cambios=3
 	else:
 		cambios=2
+		
+	infoCambio='Le quedan '+str(cambios)+' cambios a utilizar'	
     	
 	tablero = [[sg.Button(tooltip=agregarDescripcion(i,j), image_filename=asignarImagen(i,j), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(15)] for i in range(15)]
 	
-	CPU = [[sg.Button(image_filename=unknown, image_size=(30,30),pad=(0,0), key='?') for i in range(7)]]
+	CPU = [[sg.Button(image_filename='./letras/NN.png', image_size=(30,30),pad=(0,0), key='?') for i in range(7)]]
 	
 	Jugador = [[place(sg.Button(image_filename=atrilJugador.getImagen(i), image_size=(30,30),key = i, pad = (0,0)))for i in range(7)]]
 	
-	Botones = [[sg.Button('Validar',image_filename='./img/VAL.png',image_size=(120,27),button_color=('white',background),border_width=0, key='val'),
-                sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),button_color=('white',background),border_width=0,key='cambiar',visible=True)
-              ]]
+	Botones = [[sg.Button('Validar',image_filename='./img/VAL.png',image_size=(120,27),button_color=('white',background),border_width=0, pad=(0,0), key='val'),
+                sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),tooltip=infoCambio,button_color=('white',background),border_width=0, pad=(0,0), key='cambiar',visible=True)]]
               
-	contadorCPU = [[sg.Text(totalCPU, key='TOT1')]]
-	contadorJugador = [[sg.Text(totalJugador, key='TOT2')]]
+	contadorCPU = [[sg.Text(totalCPU, size=(3,1), key='TOT1')]]
+	contadorJugador = [[sg.Text(totalJugador, size=(3,1), key='TOT2')]]
 	venCPU = [[sg.Listbox(values=palabrasCPU, size=(20,5), key='LIS1')]]
 	venJugador = [[sg.Listbox(values=palabrasJugador, size=(20,5), key='LIS2')]]
 	ven2 = [[sg.Frame('Palabras Acertadas CPU',venCPU)],[sg.Frame('Total Puntos CPU',contadorCPU)]]
 	ven = [[sg.Frame('Palabras Acertadas Jugador',venJugador)],[sg.Frame('Total Puntos Jugador',contadorJugador)]]
-	posponer = [[sg.Button('Posponer Partida',image_filename='./img/POS.png',image_size=(120,27),button_color=('white',background),border_width=0, key='POS')]]
+	Botones2 = [[sg.Button('Posponer Partida',image_filename='./img/POS.png',image_size=(120,27),button_color=('white',background),border_width=0, key='POS')],
+				[sg.Button('Finalizar Partida',image_filename='./img/FIN.png',image_size=(120,27),button_color=('white',background),border_width=0, key='FIN')]
+				]
 	logo = [[sg.Button(image_filename = './img/MINI.png', image_size = (160,93), border_width = 0, button_color = ('white',background), key='MINI')]]
 	
-	datos= [[sg.Column(logo)],[sg.Column(ven2)],[sg.Column(ven)],[sg.Column(posponer)]]
+	datos= [[sg.Column(ven2)],[sg.Column(ven)],[sg.Column(Botones2)]]
 	Interfaz = [[sg.Column(CPU)],[sg.Column(tablero),sg.Column(datos)],[sg.Column(Jugador),sg.Column(Botones)]]       
 	
 	window = sg.Window('Scrabble').Layout(Interfaz)
@@ -239,11 +233,14 @@ def main():
 					pos = []
 					for letra in palabra:
 						word=word+letra.getLetra().lower()
-						pos.append(letra.getPos())	
-					print(word)
+						pos.append(letra.getPos())
 					if(palabra_Valida(word,nivel)):
 						atrilJugador.completarAtril(posFichas)
-						totalJugador+=calcularPuntaje(palabra)
+						puntos = calcularPuntaje(palabra)
+						totalJugador+=puntos
+						palabrasJugador.append((word.upper(),puntos))
+						window['LIS2'].update(values=palabrasJugador)
+						window['TOT2'].update(totalJugador)
 						for i in posFichas:
 							window[i].update(image_filename=atrilJugador.getImagen(i))
 							window[i].update(visible=True)
@@ -259,26 +256,29 @@ def main():
 					posSiguiente = []
 					palabra = []
 					posFichas=[]
-				elif(event =='cambiar'):
+				elif(event =='cambiar')and(cambios>0):
 					sg.popup('Seleccione las teclas a cambiar,confirme con el boton Cambiar Fichas')
 					elegidas=[]
 					ok=True
 					while(ok == True):
 						clave,values=window.read()
 						if(type(clave) == int):
-							if(clave in elegidas): #Si el jugador ya eligio esa ficha del atril
+							if(clave in elegidas):
 								sg.popup('Ya se agrego')
 							else:
-           						 elegidas.append(clave)
+								elegidas.append(clave)
 						elif(clave=='cambiar'):
-							 ok=False							
+							ok=False
+						elif(type(clave)!=int)and(clave!='cambiar'):
+							sg.popup('Seleccione una ficha válida')	
 					atrilJugador.cambiarFichas(elegidas)
 					for i in elegidas:
 						window[i].update(image_filename=atrilJugador.getImagen(i))
 						window[i].update(visible=True)	
 					cambios=cambios-1
+					window['cambiar'].SetTooltip('Le quedan '+str(cambios)+' cambios a utilizar')
 					if(cambios == 0): #Si el jugador se queda sin cambios de fichas
-						window.FindElement('cambiar').Update(visible=False)	
+						window['cambiar'].SetTooltip('Ya no posee cambios a utilizar')
 					turno='CPU'	 
 			except(NameError):
 			#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
@@ -346,8 +346,11 @@ def main():
 							sig=pos[0]+1
 							pos=(sig,pos[1])
 				atrilCPU.completarAtrilCPU(valida)
-				totalCPU+=calcularPuntaje(datos)
-				palabrasCPU.append(word)
+				puntos = calcularPuntaje(datos)
+				totalCPU+= puntos
+				palabrasCPU.append((word.upper(),puntos))
+				window['LIS1'].update(values=palabrasCPU)
+				window['TOT1'].update(totalCPU)
 				acertadas+=1
 				turno='Jugador'	
 	window.Close()
