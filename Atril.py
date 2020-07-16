@@ -37,5 +37,7 @@ class Atril:
 		self.__listaFichas.remove(ficha)	
 	
 	def cambiarFichas(self,fichas):
-		self.completarAtril(fichas)     
-
+		self.completarAtril(fichas)
+		for i in fichas:
+	   		self.__bolsa.agregar_Bolsa(self.getLetra(i),1)
+		
