@@ -3,6 +3,7 @@ from Atril import Atril
 from BackEnd import BackEnd
 from palabra_Valida import clasificar, palabra_Valida
 import random
+import time
 
 background = sg.LOOK_AND_FEEL_TABLE['DarkBlue2']['BACKGROUND']
 
@@ -115,7 +116,13 @@ def main():
 			total = total * 2
 		if(TP == True):
 			total = total * 3
-		return total	
+		return total
+		
+	def iniciarJugada():
+		for i in range(60):
+			time.sleep(0.95)
+			window['TIME2'].UpdateBar(i + 1)
+			window['SEG'].Update(str(i+1))
 	
 	niveles = [[sg.Button('Facil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('facil'))],
           	  [sg.Button('Medio',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('medio'))]	,
@@ -127,12 +134,20 @@ def main():
 	event,values= Dificultad.Read()	
 	if(event == 'facil'):
 	 	 nivel='facil'
+	 	 cambios=4
+	 	 tiempoPartida=30000
 	elif (event=='medio'):
          nivel='medio'
+         cambios=3
+         tiempoPartida=20000
 	else:		
 		 nivel='dificil'
+		 cambios=2
+		 tiempoPartida=10000
 	Dificultad.close()
+	
 	turno=random.choice(['CPU','Jugador'])
+	
 	acertadas = 0
 	fichasUsadas = 0
 	posSiguiente = []
@@ -147,13 +162,7 @@ def main():
 	palabrasCPU=[]
 	totalCPU=0
 	totalJugador=0
-
-	if(nivel=='facil'):
-		cambios=4
-	elif(nivel=='medio'):
-		cambios=3
-	else:
-		cambios=2
+	
 		
 	infoCambio='Le quedan '+str(cambios)+' cambios a utilizar'	
     	
@@ -161,26 +170,28 @@ def main():
 	
 	CPU = [[sg.Button(image_filename='./letras/NN.png', image_size=(30,30),pad=(0,0), key='?') for i in range(7)]]
 	
-	Jugador = [[place(sg.Button(image_filename=atrilJugador.getImagen(i), image_size=(30,30),key = i, pad = (0,0)))for i in range(7)]]
+	Jugador = [[place(sg.Button(image_filename=atrilJugador.getImagen(i), image_size=(30,30),key = int(i), pad = (0,0)))for i in range(7)]]
 	
 	Botones = [[sg.Button('Validar',image_filename='./img/VAL.png',image_size=(120,27),button_color=('white',background),border_width=0, pad=(0,0), key='val'),
-                sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),tooltip=infoCambio,button_color=('white',background),border_width=0, pad=(0,0), key='cambiar',visible=True)]]
+                sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),tooltip=infoCambio,button_color=('white',background),border_width=0, pad=(0,0), key='cambiar',visible=True),
+                sg.Text('     Tiempo de Partida: 00:00')
+                ]]
               
 	contadorCPU = [[sg.Text(totalCPU, size=(3,1), key='TOT1')]]
 	contadorJugador = [[sg.Text(totalJugador, size=(3,1), key='TOT2')]]
-	venCPU = [[sg.Listbox(values=palabrasCPU, size=(20,5), key='LIS1')]]
-	venJugador = [[sg.Listbox(values=palabrasJugador, size=(20,5), key='LIS2')]]
+	venCPU = [[sg.Listbox(values=palabrasCPU, size=(20,4), key='LIS1')]]
+	venJugador = [[sg.Listbox(values=palabrasJugador, size=(20,4), key='LIS2')]]
 	ven2 = [[sg.Frame('Palabras Acertadas CPU',venCPU)],[sg.Frame('Total Puntos CPU',contadorCPU)]]
 	ven = [[sg.Frame('Palabras Acertadas Jugador',venJugador)],[sg.Frame('Total Puntos Jugador',contadorJugador)]]
 	Botones2 = [[sg.Button('Posponer Partida',image_filename='./img/POS.png',image_size=(120,27),button_color=('white',background),border_width=0, key='POS')],
 				[sg.Button('Finalizar Partida',image_filename='./img/FIN.png',image_size=(120,27),button_color=('white',background),border_width=0, key='FIN')]
 				]
-	logo = [[sg.Button(image_filename = './img/MINI.png', image_size = (160,93), border_width = 0, button_color = ('white',background), key='MINI')]]
+	logo = [[sg.Image(filename = './img/MINI.png', size = (128,75), background_color =background,key='MINI')]]
 	
-	datos= [[sg.Column(ven2)],[sg.Column(ven)],[sg.Column(Botones2)]]
-	Interfaz = [[sg.Column(CPU)],[sg.Column(tablero),sg.Column(datos)],[sg.Column(Jugador),sg.Column(Botones)]]       
+	datos= [[sg.Column(logo,justification='center')],[sg.Column(ven2)],[sg.Column(ven)],[sg.Column(Botones2)]]
+	Interfaz = [[sg.Column(CPU)],[sg.Column(tablero),sg.Column(datos)],[sg.Column(Jugador),sg.Column(Botones)]]     
 	
-	window = sg.Window('Scrabble').Layout(Interfaz)
+	window = sg.Window('ScrabbleAR').Layout(Interfaz)
 	
 	if(turno == 'CPU'):
 		sg.popup('Empieza la CPU')
@@ -270,6 +281,7 @@ def main():
 						elif(clave=='cambiar'):
 							ok=False
 						elif(type(clave)!=int)and(clave!='cambiar'):
+							print(type(clave))
 							sg.popup('Seleccione una ficha válida')	
 					atrilJugador.cambiarFichas(elegidas)
 					for i in elegidas:
@@ -279,7 +291,9 @@ def main():
 					window['cambiar'].SetTooltip('Le quedan '+str(cambios)+' cambios a utilizar')
 					if(cambios == 0): #Si el jugador se queda sin cambios de fichas
 						window['cambiar'].SetTooltip('Ya no posee cambios a utilizar')
-					turno='CPU'	 
+					turno='CPU'
+				elif(event=='FIN'):
+					sg.popup_no_wait('¿Desea salir del juego?')
 			except(NameError):
 			#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
 				pass
