@@ -118,12 +118,6 @@ def main():
 			total = total * 3
 		return total
 		
-	def iniciarJugada():
-		for i in range(60):
-			time.sleep(0.95)
-			window['TIME2'].UpdateBar(i + 1)
-			window['SEG'].Update(str(i+1))
-	
 	niveles = [[sg.Button('Facil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('facil'))],
           	  [sg.Button('Medio',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('medio'))]	,
 			  [sg.Button('Dificil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('dificil'))]
@@ -135,15 +129,15 @@ def main():
 	if(event == 'facil'):
 	 	 nivel='facil'
 	 	 cambios=4
-	 	 tiempoPartida=30000
+	 	 tiempoPartida=12000#2 minutos
 	elif (event=='medio'):
          nivel='medio'
          cambios=3
-         tiempoPartida=20000
+         tiempoPartida=18000#3 minutos
 	else:		
 		 nivel='dificil'
 		 cambios=2
-		 tiempoPartida=10000
+		 tiempoPartida=24000#4 minutos
 	Dificultad.close()
 	
 	turno=random.choice(['CPU','Jugador'])
@@ -162,7 +156,9 @@ def main():
 	palabrasCPU=[]
 	totalCPU=0
 	totalJugador=0
-	
+	tiempoActual = 0
+	tiempoInicio = int(round(time.time()*100))
+	fin=False
 		
 	infoCambio='Le quedan '+str(cambios)+' cambios a utilizar'	
     	
@@ -174,7 +170,7 @@ def main():
 	
 	Botones = [[sg.Button('Validar',image_filename='./img/VAL.png',image_size=(120,27),button_color=('white',background),border_width=0, pad=(0,0), key='val'),
                 sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),tooltip=infoCambio,button_color=('white',background),border_width=0, pad=(0,0), key='cambiar',visible=True),
-                sg.Text('     Tiempo de Partida: 00:00')
+                sg.Text('     Tiempo de Partida: 00:00',key='TIME')
                 ]]
               
 	contadorCPU = [[sg.Text(totalCPU, size=(3,1), key='TOT1')]]
@@ -186,7 +182,7 @@ def main():
 	Botones2 = [[sg.Button('Posponer Partida',image_filename='./img/POS.png',image_size=(120,27),button_color=('white',background),border_width=0, key='POS')],
 				[sg.Button('Finalizar Partida',image_filename='./img/FIN.png',image_size=(120,27),button_color=('white',background),border_width=0, key='FIN')]
 				]
-	logo = [[sg.Image(filename = './img/MINI.png', size = (128,75), background_color =background,key='MINI')]]
+	logo = [[sg.Image(filename = './img/MINI.png', size = (128,76), background_color =background,key='MINI')]]
 	
 	datos= [[sg.Column(logo,justification='center')],[sg.Column(ven2)],[sg.Column(ven)],[sg.Column(Botones2)]]
 	Interfaz = [[sg.Column(CPU)],[sg.Column(tablero),sg.Column(datos)],[sg.Column(Jugador),sg.Column(Botones)]]     
@@ -197,9 +193,11 @@ def main():
 		sg.popup('Empieza la CPU')
 	else:
 		sg.popup('Empieza el Jugador')
-	while True:
-		if(turno == 'Jugador'):
-			event,values= window.Read()
+	while True and fin==False:
+		if(turno == 'Jugador')and(int(round(time.time()*100))-tiempoInicio<tiempoPartida):
+			event,values= window.Read(timeout=0)
+			tiempoActual=int(round(time.time()*100))-tiempoInicio
+			window['TIME'].update('     Tiempo de Partida: {:02d}:{:02d}'.format((tiempoActual // 100) // 60,(tiempoActual // 100) % 60))
 			try:
 				if(type(event) == tuple):
 					if(fichasUsadas == 0)and(event[0] == 7)and(event[1] == 7)and(clave!=None):
@@ -268,7 +266,7 @@ def main():
 					palabra = []
 					posFichas=[]
 				elif(event =='cambiar')and(cambios>0):
-					sg.popup('Seleccione las teclas a cambiar,confirme con el boton Cambiar Fichas')
+					sg.popup('Seleccione las fichas a cambiar,confirme con el boton Cambiar Fichas')
 					elegidas=[]
 					ok=True
 					while(ok == True):
@@ -297,8 +295,10 @@ def main():
 			except(NameError):
 			#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
 				pass
-		elif(turno == 'CPU'):
+		elif(turno == 'CPU')and(int(round(time.time()*100))-tiempoInicio<tiempoPartida):
 			window.Finalize()
+			tiempoActual=int(round(time.time()*100))-tiempoInicio
+			window['TIME'].update('     Tiempo de Partida: {:02d}:{:02d}'.format((tiempoActual // 100) // 60,(tiempoActual // 100) % 60))
 			palabras=[]
 			datos=[]
 			valida=None
@@ -366,7 +366,16 @@ def main():
 				window['LIS1'].update(values=palabrasCPU)
 				window['TOT1'].update(totalCPU)
 				acertadas+=1
-				turno='Jugador'	
+				turno='Jugador'
+		elif(int(round(time.time()*100))-tiempoInicio>=tiempoPartida):
+			window.Finalize()
+			if(totalJugador>totalCPU):
+				sg.popup('Ganaste')
+			elif(totalJugador==totalCPU):
+				sg.popup('Empate')
+			else:
+				sg.popup('Perdiste')
+			fin=True							
 	window.Close()
 	
 if __name__ == '__main__':
