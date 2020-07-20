@@ -10,41 +10,67 @@ background = sg.LOOK_AND_FEEL_TABLE['DarkBlue2']['BACKGROUND']
 
 #---------Posicion de los casilleros especiales---------#
 
-posDobleLetra=[(2,2),(4,4),(6,6),(2,12),(4,10),(6,8),(8,6),(10,4),(12,2),(8,8),(10,10),(12,12),(12,6),(12,8)]
-posTripleLetra=[(1,1),(3,3),(5,5),(5,9),(3,11),(1,13),(9,5),(11,3),(13,1),(9,9),(11,11),(13,13),(3,5),(1,7),(3,9)]
-posDoblePalabra=[(5,3),(7,1),(9,3),(5,11),(7,13),(9,11),(11,5),(11,9),(13,7),(0,0),(14,14)]
-posTriplePalabra=[(6,2),(8,2),(6,12),(8,12),(2,6),(2,8),(14,0),(0,14)]
-posInicial=[(7,7)]
+tableroFacil={'posDobleLetra':[(2,2),(4,4),(6,6),(2,12),(4,10),(6,8),(8,6),(10,4),(12,2),(8,8),(10,10),(12,12),(12,6),(12,8)],
+			  'posTripleLetra':[(1,1),(3,3),(5,5),(5,9),(3,11),(1,13),(9,5),(11,3),(13,1),(9,9),(11,11),(13,13),(3,5),(1,7),(3,9)],
+			  'posDoblePalabra':[(5,3),(7,1),(9,3),(5,11),(7,13),(9,11),(11,5),(11,9),(13,7),(0,0),(14,14)],
+			  'posTriplePalabra':[(6,2),(8,2),(6,12),(8,12),(2,6),(2,8),(14,0),(0,14)],
+			  'posMenosUno':[],
+			  'posMenosDos':[],
+			  'posMenosTres':[],
+			  'posInicial':[(7,7)]
+			 }
+tableroMedio={'posDobleLetra':[(0,4),(4,7),(4,14),(5,4),(5,10),(9,4),(9,10),(10,0),(10,7),(14,10)],
+			  'posTripleLetra':[(0,10),(4,0),(4,5),(4,9),(7,3),(7,11),(10,5),(10,9),(10,14),(14,4)],
+			  'posDoblePalabra':[(0,0),(2,4),(2,10),(12,4),(12,10),(14,14)],
+			  'posTriplePalabra':[(0,14),(4,2),(4,12),(10,2),(10,12),(14,0)],
+			  'posMenosUno':[(1,1),(1,13),(5,7),(7,5),(7,9),(9,7),(13,1),(13,13)],
+			  'posMenosDos':[(0,7),(3,3),(3,11),(11,3),(11,11),(14,7)],
+			  'posMenosTres':[(2,7),(7,1),(7,13),(12,7)],
+			  'posInicial':[(7,7)]
+			 }		 
+			 
 
 #-------------------------------------#
 
-def asignarImagen(i,j):
-	if((i,j)in posDobleLetra):
+def asignarImagen(i,j,tab):
+	if((i,j)in tab['posDobleLetra']):
 		return './img/DL.png'
-	elif((i,j)in posTripleLetra):
+	elif((i,j)in tab['posTripleLetra']):
 		return './img/TL.png'
-	elif((i,j)in posDoblePalabra):
+	elif((i,j)in tab['posDoblePalabra']):
 		return './img/DP.png'
-	elif((i,j)in posTriplePalabra):
-		return './img/TP.png'		
-	elif((i,j) == (7,7)):
+	elif((i,j)in tab['posTriplePalabra']):
+		return './img/TP.png'
+	elif((i,j)in tab['posMenosUno']):
+		return './img/P1.png'
+	elif((i,j)in tab['posMenosDos']):
+		return './img/P2.png'
+	elif((i,j)in tab['posMenosTres']):
+		return './img/P3.png'					
+	elif((i,j) in tab['posInicial']):
 		return './img/IN.png'
 	else:
 		return './img/N.png'	
-		
-def agregarDescripcion(i,j):
-	if((i,j)in posDobleLetra):
+
+def agregarDescripcion(i,j,tab):
+	if((i,j)in tab['posDobleLetra']):
 		return 'Duplica el valor de tu letra'
-	elif((i,j)in posTripleLetra):
+	elif((i,j)in tab['posTripleLetra']):
 		return 'Triplica el valor de tu letra'
-	elif((i,j)in posDoblePalabra):
+	elif((i,j)in tab['posDoblePalabra']):
 		return 'Duplica el valor de tu palabra'
-	elif((i,j)in posTriplePalabra):
+	elif((i,j)in tab['posTriplePalabra']):
 		return 'Triplca el valor de tu palabra'
-	elif((i,j) == (7,7)):
+	elif((i,j)in tab['posMenosUno']):
+		return 'Resta 1 punto a tu palabra'
+	elif((i,j)in tab['posMenosDos']):
+		return 'Resta 2 puntos a tu palabra'
+	elif((i,j)in tab['posMenosTres']):
+		return 'Resta 3 puntos a tu palabra'					
+	elif((i,j) in tab['posInicial']):
 		return 'Coloca una ficha aqui para comenzar el juego'
-	else:	
-		return None
+	else:
+		return None		
 		
 def place(elem):
     return sg.Column([[elem]], pad=(0,0))
@@ -103,6 +129,7 @@ def main():
 		for letra in palabra:
 			valor=letra.getValor()
 			tipo=letra.getTipo()
+			print(tipo)
 			if(tipo == 'DL'):
 				valor = valor * 2
 			elif(tipo == 'TL'):
@@ -128,14 +155,17 @@ def main():
 	event,values= Dificultad.Read()	
 	if(event == 'facil'):
 	 	 nivel='facil'
+	 	 tab=tableroFacil
 	 	 cambios=4
 	 	 tiempoPartida=12000#2 minutos
 	elif (event=='medio'):
          nivel='medio'
+         tab=tableroMedio
          cambios=3
          tiempoPartida=18000#3 minutos
 	else:		
 		 nivel='dificil'
+		 tab=tableroMedio
 		 cambios=2
 		 tiempoPartida=24000#4 minutos
 	Dificultad.close()
@@ -147,7 +177,7 @@ def main():
 	posSiguiente = []
 	palabra = []
 	posFichas =[]
-	tabla = BackEnd()
+	tabla = BackEnd(tab)
 	atrilJugador = Atril()
 	atrilJugador.inicializarAtril()
 	atrilCPU = Atril()
@@ -162,7 +192,7 @@ def main():
 		
 	infoCambio='Le quedan '+str(cambios)+' cambios a utilizar'	
     	
-	tablero = [[sg.Button(tooltip=agregarDescripcion(i,j), image_filename=asignarImagen(i,j), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(15)] for i in range(15)]
+	tablero = [[sg.Button(tooltip=agregarDescripcion(i,j,tab), image_filename=asignarImagen(i,j,tab), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(15)] for i in range(15)]
 	
 	CPU = [[sg.Button(image_filename='./letras/NN.png', image_size=(30,30),pad=(0,0), key='?') for i in range(7)]]
 	
