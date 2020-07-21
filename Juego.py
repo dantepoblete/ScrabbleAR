@@ -124,25 +124,37 @@ def main():
 		
 	def calcularPuntaje(palabra):
 		total = 0
-		DP = False
-		TP = False
+		DP = 0
+		TP = 0
+		descuento=0
 		for letra in palabra:
 			valor=letra.getValor()
 			tipo=letra.getTipo()
 			print(tipo)
-			if(tipo == 'DL'):
-				valor = valor * 2
-			elif(tipo == 'TL'):
-				valor = valor * 3		
-			elif(tipo == 'DP'):
-				DP = True
-			elif(tipo == 'TP'):
-				TP = True
+			if(tipo == ('DL' or 'TL')):
+				if(tipo =='DL'):
+					valor = valor * 2
+				else:
+					valor = valor * 3		
+			elif(tipo == ('DP' or 'TP')):
+				if(tipo =='DL'):
+					DP += 1
+				else:
+					TP+=1
+			elif(tipo == ('P1' or 'P2' or 'P3')):
+				if(tipo=='P1'):
+					descuento+=1
+				elif(tipo=='P2'):
+					descuento+=2
+				else:
+					descuento+=3
 			total = total + valor
-		if(DP == True):
-			total = total * 2
-		if(TP == True):
-			total = total * 3
+		if(DP > 0):
+			total = total * 2 * DP
+		if(TP > 0):
+			total = total * 3 *TP
+	 	if(descuento > 0):
+			total=total-descuento
 		return total
 		
 	niveles = [[sg.Button('Facil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('facil'))],
