@@ -22,9 +22,10 @@ def main():
 	agregarFichas = [[sg.Button('Agregar Fichas',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='ADD')]]
 	selectTiempo=[[sg.Slider(range=(1,15), orientation='h', size=(30, 20), default_value=8, key='TIME')]]
 	selectCambios=[[sg.Slider(range=(1,5), orientation='h', size=(30, 20), default_value=3, key='CAMB')]]
+	panelUno = [[sg.Column(selectLetras),sg.Column(selectValores),sg.Column(selectCantidad)],[sg.Column(agregarFichas)]]
 
 	configUno = [[sg.Frame('Configurar Nivel',niveles)]]
-	configDos = [[sg.Frame('Configurar Fichas',[[sg.Column(selectLetras),sg.Column(selectValores),sg.Column(selectCantidad),sg.Column(agregarFichas)]])]]
+	configDos = [[sg.Frame('Configurar Fichas',panelUno)]]
 	configTres = [[sg.Frame('Configurar Tiempo de Juego (en minutos)',selectTiempo)]]
 	configCuatro = [[sg.Frame('Configurar Cambios',selectCambios)]]
 	
