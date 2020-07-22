@@ -19,11 +19,12 @@ def main():
 	selectLetras = [[sg.Text('Letra')],[sg.Spin(values=letras, size=(3,1),initial_value=letras[0], key='LET')]]
 	selectValores = [[sg.Text('Valor')],[sg.Spin(values=valores, size=(3,1),initial_value=valores[0], key='VAL')]]
 	selectCantidad = [[sg.Text('Cantidad')],[sg.Spin(values=cantidad, size=(3,1),initial_value=cantidad[0], key='CANT')]]
+	agregarFichas = [[sg.Button('Agregar Fichas',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='ADD')]]
 	selectTiempo=[[sg.Slider(range=(1,15), orientation='h', size=(30, 20), default_value=8, key='TIME')]]
 	selectCambios=[[sg.Slider(range=(1,5), orientation='h', size=(30, 20), default_value=3, key='CAMB')]]
 
 	configUno = [[sg.Frame('Configurar Nivel',niveles)]]
-	configDos = [[sg.Frame('Configurar Fichas',[[sg.Column(selectLetras),sg.Column(selectValores),sg.Column(selectCantidad)]])]]
+	configDos = [[sg.Frame('Configurar Fichas',[[sg.Column(selectLetras),sg.Column(selectValores),sg.Column(selectCantidad),sg.Column(agregarFichas)]])]]
 	configTres = [[sg.Frame('Configurar Tiempo de Juego (en minutos)',selectTiempo)]]
 	configCuatro = [[sg.Frame('Configurar Cambios',selectCambios)]]
 	
