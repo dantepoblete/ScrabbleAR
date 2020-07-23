@@ -13,7 +13,7 @@ class Bolsa:
      def inicializar_Bolsa(self,dic):
           for letra in dic.keys():
                agregar_Bolsa(letra,dic[letra][0],dic[letra][1])
-		random.shuffle(self.fichas)
+	  random.shuffle(self.fichas)
              
      def cantidad_fichas(self):
           #devuelve la cantidad de fichas restantes
