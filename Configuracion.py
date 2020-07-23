@@ -71,9 +71,8 @@ valores = (1,2,3,4,6,8,10)
 
 cantidad = (1,2,3,4,5,6,7,8,9,10,11)
 
-fichasAgregadas=0 #Como se configura la cantidad de fichas, esta variable controla que no se agreguen mas de 100 fichas.
 
-def main():
+def main(configuracion):
 	niveles = [[sg.Button('Facil',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='EASY'),
 				sg.Button('Medio',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='MID'),
 				sg.Button('Dificil',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='HARD')
@@ -122,12 +121,12 @@ def main():
 			configuracion.setCambios(round(values['CAMB']))
 		elif(event=='OK'):
 			sg.popup('La cofiguracion fue guardada con exito')
-			return configuracion
+			break
 		elif(event=='CANCEL')or(event=='DEFAULT'):
-			configuracion2=Config()
+			configuracion=Config()
 			if(event=='DEFAULT'):
 				sg.popup('Valores Reestablecidos')
-			return configuracion2
+			break	
 			
 	window.Close()
 			
