@@ -100,8 +100,6 @@ def main(configuracion):
 
 	window= sg.Window('Configuracion ScrabbleAR',layout, use_default_focus=False)
 	
-	configuracion=Config()
-	
 	while True:
 		event,values=window.Read()
 		if(event=='EASY'):
