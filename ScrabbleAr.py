@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 import Juego as Game
-import Configuracion as Config
+import Configuracion as Configuracion
+from Configuracion import Config
 import webbrowser
 
 sg.change_look_and_feel('LightBlue')
@@ -20,13 +21,15 @@ def main(args):
 
 	menu = sg.Window('Menu Principal', panel, use_default_focus=False)
 	
+	configGame=Config()	#Configuracion por defecto del juego.
+	
 	while True:
 		event,values = menu.Read()
 		if event == '-play-':
 			sg.change_look_and_feel('DarkBlue2')
-			Game.main()
+			Game.main(configGame)
 		elif event == '-config-':
-			Config.main()
+			configGame=Configuracion.main()
 		elif event == '-info-':
 			webbrowser.open('https://github.com/dantepoblete/ScrabbleAR', new = 2)	
 

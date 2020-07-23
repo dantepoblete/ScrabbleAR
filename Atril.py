@@ -1,9 +1,8 @@
 from Bolsa import Bolsa
 
 class Atril:
-	def __init__(self):
-		self.__bolsa = Bolsa()
-		self.__bolsa.inicializar_Bolsa()
+	def __init__(self,dic):
+		self.__bolsa = Bolsa(dic)
 		self.__listaFichas = []
         
 	def inicializarAtril(self):

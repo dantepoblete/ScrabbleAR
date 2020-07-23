@@ -2,35 +2,12 @@ import PySimpleGUI as sg
 from Atril import Atril
 from BackEnd import BackEnd
 from palabra_Valida import clasificar, palabra_Valida
+from Configuracion import Config
 import random
 import time
+import pickle
 
 background = sg.LOOK_AND_FEEL_TABLE['DarkBlue2']['BACKGROUND']
-
-
-#---------Posicion de los casilleros especiales---------#
-
-tableroFacil={'posDobleLetra':[(2,2),(4,4),(6,6),(2,12),(4,10),(6,8),(8,6),(10,4),(12,2),(8,8),(10,10),(12,12),(12,6),(12,8)],
-			  'posTripleLetra':[(1,1),(3,3),(5,5),(5,9),(3,11),(1,13),(9,5),(11,3),(13,1),(9,9),(11,11),(13,13),(3,5),(1,7),(3,9)],
-			  'posDoblePalabra':[(5,3),(7,1),(9,3),(5,11),(7,13),(9,11),(11,5),(11,9),(13,7),(0,0),(14,14)],
-			  'posTriplePalabra':[(6,2),(8,2),(6,12),(8,12),(2,6),(2,8),(14,0),(0,14)],
-			  'posMenosUno':[],
-			  'posMenosDos':[],
-			  'posMenosTres':[],
-			  'posInicial':[(7,7)]
-			 }
-tableroMedio={'posDobleLetra':[(0,4),(4,7),(4,14),(5,4),(5,10),(9,4),(9,10),(10,0),(10,7),(14,10)],
-			  'posTripleLetra':[(0,10),(4,0),(4,5),(4,9),(7,3),(7,11),(10,5),(10,9),(10,14),(14,4)],
-			  'posDoblePalabra':[(0,0),(2,4),(2,10),(12,4),(12,10),(14,14)],
-			  'posTriplePalabra':[(0,14),(4,2),(4,12),(10,2),(10,12),(14,0)],
-			  'posMenosUno':[(1,1),(1,13),(5,7),(7,5),(7,9),(9,7),(13,1),(13,13)],
-			  'posMenosDos':[(0,7),(3,3),(3,11),(11,3),(11,11),(14,7)],
-			  'posMenosTres':[(2,7),(7,1),(7,13),(12,7)],
-			  'posInicial':[(7,7)]
-			 }		 
-			 
-
-#-------------------------------------#
 
 def asignarImagen(i,j,tab):
 	if((i,j)in tab['posDobleLetra']):
@@ -89,7 +66,7 @@ def definirOrientacion(event,posActual):
 		return horizontal
 		
 		
-def main():
+def main(config):
 	
 	def ponerFicha(event,ficha):
 		tabla.actualizarCasilla(event[0],event[1],ficha.getLetra(),ficha.getValor())
@@ -104,7 +81,7 @@ def main():
 			ok = False
 		else:	
 			for letra in palabra:
-				if(tabla.getEstado(i,j) == False):
+				if((i,j) not in tabla.getDisponibles()):
 					ok = False
 				j+=1
 		return ok	
@@ -117,71 +94,34 @@ def main():
 			ok = False
 		else:	
 			for letra in palabra:
-				if(tabla.getEstado(i,j) == False):
+				if((i,j) not in tabla.getDisponibles()):
 					ok = False
 				i+=1
 		return ok	
 		
 	def calcularPuntaje(palabra):
 		total = 0
-		DP = 0
-		TP = 0
-		descuento=0
+		DP = False
+		TP = False
 		for letra in palabra:
 			valor=letra.getValor()
 			tipo=letra.getTipo()
-			print(tipo)
-			if(tipo == ('DL' or 'TL')):
-				if(tipo =='DL'):
-					valor = valor * 2
-				else:
-					valor = valor * 3		
-			elif(tipo == ('DP' or 'TP')):
-				if(tipo =='DL'):
-					DP += 1
-				else:
-					TP+=1
-			elif(tipo == ('P1' or 'P2' or 'P3')):
-				if(tipo=='P1'):
-					descuento+=1
-				elif(tipo=='P2'):
-					descuento+=2
-				else:
-					descuento+=3
+			if(tipo == 'DL'):
+				valor = valor * 2
+			elif(tipo == 'TL'):
+				valor = valor * 3		
+			elif(tipo == 'DP'):
+				DP = True
+			elif(tipo == 'TP'):
+				TP = True
 			total = total + valor
-		if(DP > 0):
-			total = total * 2 * DP
-		if(TP > 0):
-			total = total * 3 *TP
-	 	if(descuento > 0):
-			total=total-descuento
+		if(DP == True):
+			total = total * 2
+		if(TP == True):
+			total = total * 3
 		return total
 		
-	niveles = [[sg.Button('Facil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('facil'))],
-          	  [sg.Button('Medio',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('medio'))]	,
-			  [sg.Button('Dificil',image_filename = './img/BT.png', image_size = (150,34),button_color = ('white',background), border_width = 0, key = ('dificil'))]
-			  ] 
 
-	Dificultad = sg.Window('Dificultades', niveles,use_default_focus=False)
-	sg.popup('Elige un nivel de dificultad')
-	event,values= Dificultad.Read()	
-	if(event == 'facil'):
-	 	 nivel='facil'
-	 	 tab=tableroFacil
-	 	 cambios=4
-	 	 tiempoPartida=12000#2 minutos
-	elif (event=='medio'):
-         nivel='medio'
-         tab=tableroMedio
-         cambios=3
-         tiempoPartida=18000#3 minutos
-	else:		
-		 nivel='dificil'
-		 tab=tableroMedio
-		 cambios=2
-		 tiempoPartida=24000#4 minutos
-	Dificultad.close()
-	
 	turno=random.choice(['CPU','Jugador'])
 	
 	acertadas = 0
@@ -189,10 +129,14 @@ def main():
 	posSiguiente = []
 	palabra = []
 	posFichas =[]
+	nivel=config.getNivel()
+	tab=config.getTablero()
 	tabla = BackEnd(tab)
-	atrilJugador = Atril()
+	cambios = config.getCambios()
+	tiempoPartida = config.getTiempo()
+	atrilJugador = Atril(config.getFichas())
 	atrilJugador.inicializarAtril()
-	atrilCPU = Atril()
+	atrilCPU = Atril(config.getFichas())
 	atrilCPU.inicializarAtril()
 	palabrasJugador=[]
 	palabrasCPU=[]
@@ -252,7 +196,7 @@ def main():
 						posActual = event
 						fichasUsadas = fichasUsadas + 1
 					elif(fichasUsadas!=0)and(acertadas == 0)and(clave!=None):
-						if(tabla.getEstado(event[0],event[1]) == True)and(event in posSiguiente):
+						if(event in tabla.getDisponibles())and(event in posSiguiente):
 							posSiguiente = definirOrientacion(event,posActual)
 							ponerFicha(event,atrilJugador.getFicha(clave))
 							palabra.append(tabla.getCasilla(event[0],event[1]))
@@ -261,7 +205,7 @@ def main():
 							posActual = event
 							fichasUsadas = fichasUsadas + 1
 					elif(acertadas != 0)and(clave!=None):
-						if(tabla.getEstado(event[0],event[1]) == True)and(posSiguiente == []):
+						if(event in tabla.getDisponibles())and(posSiguiente == []):
 							posActual = event
 							posSiguiente = [(event[0]+1,event[1]),(event[0],event[1]+1)]
 							ponerFicha(event,atrilJugador.getFicha(clave))
@@ -269,7 +213,7 @@ def main():
 							posFichas.append(clave)	
 							clave = None
 							fichasUsadas = fichasUsadas + 1
-						elif(tabla.getEstado(event[0],event[1]) == True)and(event in posSiguiente):
+						elif(event in tabla.getDisponibles())and(event in posSiguiente):
 							posSiguiente = definirOrientacion(event,posActual)
 							ponerFicha(event,atrilJugador.getFicha(clave))
 							palabra.append(tabla.getCasilla(event[0],event[1]))
@@ -332,8 +276,21 @@ def main():
 					if(cambios == 0): #Si el jugador se queda sin cambios de fichas
 						window['cambiar'].SetTooltip('Ya no posee cambios a utilizar')
 					turno='CPU'
-				elif(event=='FIN'):
-					sg.popup_no_wait('¿Desea salir del juego?')
+				elif(event=='POS'):
+					guardado = 'save.txt'
+					backUp=tabla.backUpTablero()
+					with open(guardado,'wb')as archivo:
+						pickle.dump(nivel,archivo)#1°Guardo el nivel del juego.
+						pickle.dump(tab,archivo)#2°Guardo el tipo de tablero.
+						pickle.dump(backUp,archivo)#3° Guardo la visualizacion del tablero con las palabras puestas.
+						pickle.dump(palabrasJugador,archivo)#4° Guardo las palabras acertadas por el jugador.
+						pickle.dump(palabrasCPU,archivo)#5° Guardo las palabras acertadas por la IA.
+						pickle.dump(totalJugador,archivo)#6° Guardo el puntaje del jugador.
+						pickle.dump(totalCPU,archivo)#7° Guardo el puntaje del jugador.
+						pickle.dump(cambios,archivo)#8° Guardo la cantidad de cambios disponibles.
+						pickle.dump(tiempoInicio,archivo)#9° Guardo el tiempo de inicio de la partida.
+						pickle.dump(tiempoActual,archivo)#10° Guardo el tiempo actual de la partida.
+					sg.popup('Datos Guardados')					
 			except(NameError):
 			#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
 				pass
