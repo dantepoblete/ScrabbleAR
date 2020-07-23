@@ -29,7 +29,7 @@ def main(args):
 			sg.change_look_and_feel('DarkBlue2')
 			Game.main(configGame)
 		elif event == '-config-':
-			configGame=Configuracion.main()
+			Configuracion.main(configGame)
 		elif event == '-info-':
 			webbrowser.open('https://github.com/dantepoblete/ScrabbleAR', new = 2)	
 
