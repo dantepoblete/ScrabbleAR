@@ -25,4 +25,6 @@ class Bolsa:
      
      def getFichas(self):
          return self.fichas
-    
+         
+     def setBolsa(self,fichas):
+         self.fichas=fichas

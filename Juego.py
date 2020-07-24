@@ -9,26 +9,6 @@ import pickle
 
 background = sg.LOOK_AND_FEEL_TABLE['DarkBlue2']['BACKGROUND']
 
-def asignarImagen(i,j,tab):
-	if((i,j)in tab['posDobleLetra']):
-		return './img/DL.png'
-	elif((i,j)in tab['posTripleLetra']):
-		return './img/TL.png'
-	elif((i,j)in tab['posDoblePalabra']):
-		return './img/DP.png'
-	elif((i,j)in tab['posTriplePalabra']):
-		return './img/TP.png'
-	elif((i,j)in tab['posMenosUno']):
-		return './img/P1.png'
-	elif((i,j)in tab['posMenosDos']):
-		return './img/P2.png'
-	elif((i,j)in tab['posMenosTres']):
-		return './img/P3.png'					
-	elif((i,j) in tab['posInicial']):
-		return './img/IN.png'
-	else:
-		return './img/N.png'	
-
 def agregarDescripcion(i,j,tab):
 	if((i,j)in tab['posDobleLetra']):
 		return 'Duplica el valor de tu letra'
@@ -66,7 +46,7 @@ def definirOrientacion(event,posActual):
 		return horizontal
 		
 		
-def main(config):
+def main(config,carga=False,):
 	
 	def ponerFicha(event,ficha):
 		tabla.actualizarCasilla(event[0],event[1],ficha.getLetra(),ficha.getValor())
@@ -101,54 +81,92 @@ def main(config):
 		
 	def calcularPuntaje(palabra):
 		total = 0
-		DP = False
-		TP = False
+		DP = 0
+		TP = 0
+		descuento=0
 		for letra in palabra:
 			valor=letra.getValor()
 			tipo=letra.getTipo()
-			if(tipo == 'DL'):
-				valor = valor * 2
-			elif(tipo == 'TL'):
-				valor = valor * 3		
-			elif(tipo == 'DP'):
-				DP = True
-			elif(tipo == 'TP'):
-				TP = True
+			if(tipo == ('DL' or 'TL')):
+				if(tipo =='DL'):
+					valor = valor * 2
+				else:
+					valor = valor * 3		
+			elif(tipo == ('DP' or 'TP')):
+				if(tipo =='DL'):
+					DP += 1
+				else:
+					TP+=1
+			elif(tipo == ('P1' or 'P2' or 'P3')):
+				if(tipo=='P1'):
+					descuento+=1
+				elif(tipo=='P2'):
+					descuento+=2
+				else:
+					descuento+=3
 			total = total + valor
-		if(DP == True):
-			total = total * 2
-		if(TP == True):
-			total = total * 3
+		if(DP > 0):
+			total = total * 2 * DP
+		if(TP > 0):
+			total = total * 3 *TP
+		if(descuento > 0):
+			total=total-descuento
 		return total
 		
-
-	turno=random.choice(['CPU','Jugador'])
-	
-	acertadas = 0
-	fichasUsadas = 0
+	if(carga==True):
+		guardado = 'save.txt'
+		with open(guardado,'rb')as archivo:
+			nivel=pickle.load(archivo)
+			tab=pickle.load(archivo)
+			backUpTablero=pickle.load(archivo)
+			backUpAtrilJugador=pickle.load(archivo)
+			backUpAtrilCPU=pickle.load(archivo)
+			palabrasJugador=pickle.load(archivo)
+			palabrasCPU=pickle.load(archivo)
+			totalJugador=pickle.load(archivo)
+			totalCPU=pickle.load(archivo)
+			cambios=pickle.load(archivo)
+			tiempoInicio=pickle.load(archivo)
+			tiempoActual=pickle.load(archivo)
+			turno=pickle.load(archivo)
+			fichasUsadas=pickle.load(archivo)
+			acertadas=pickle.load(archivo)
+			tiempoPartida=pickle.load(archivo)
+			tabla = BackEnd(tab)
+			tabla.restaurarTablero(backUpTablero)
+			atrilJugador = Atril(config.getFichas())
+			atrilJugador.restaurarAtril(backUpAtrilJugador)
+			atrilJugador.inicializarAtril()
+			atrilCPU = Atril(config.getFichas())
+			atrilCPU.restaurarAtril(backUpAtrilCPU)
+			atrilCPU.inicializarAtril()
+	else:		
+		turno=random.choice(['CPU','Jugador'])
+		acertadas = 0
+		fichasUsadas = 0
+		nivel=config.getNivel()
+		tab=config.getTablero()
+		tabla = BackEnd(tab)
+		cambios = 3
+		tiempoPartida = config.getTiempo()
+		atrilJugador = Atril(config.getFichas())
+		atrilJugador.inicializarAtril()
+		atrilCPU = Atril(config.getFichas())
+		atrilCPU.inicializarAtril()
+		palabrasJugador=[]
+		palabrasCPU=[]
+		totalCPU=0
+		totalJugador=0
+		tiempoActual = 0
+		tiempoInicio = int(round(time.time()*100))
+	fin=False
 	posSiguiente = []
 	palabra = []
 	posFichas =[]
-	nivel=config.getNivel()
-	tab=config.getTablero()
-	tabla = BackEnd(tab)
-	cambios = config.getCambios()
-	tiempoPartida = config.getTiempo()
-	atrilJugador = Atril(config.getFichas())
-	atrilJugador.inicializarAtril()
-	atrilCPU = Atril(config.getFichas())
-	atrilCPU.inicializarAtril()
-	palabrasJugador=[]
-	palabrasCPU=[]
-	totalCPU=0
-	totalJugador=0
-	tiempoActual = 0
-	tiempoInicio = int(round(time.time()*100))
-	fin=False
 		
 	infoCambio='Le quedan '+str(cambios)+' cambios a utilizar'	
     	
-	tablero = [[sg.Button(tooltip=agregarDescripcion(i,j,tab), image_filename=asignarImagen(i,j,tab), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(15)] for i in range(15)]
+	tablero = [[sg.Button(tooltip=agregarDescripcion(i,j,tab), image_filename=tabla.getImagen(i,j), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(15)] for i in range(15)]
 	
 	CPU = [[sg.Button(image_filename='./letras/NN.png', image_size=(30,30),pad=(0,0), key='?') for i in range(7)]]
 	
@@ -175,10 +193,14 @@ def main(config):
 	
 	window = sg.Window('ScrabbleAR').Layout(Interfaz)
 	
-	if(turno == 'CPU'):
+	if(turno == 'CPU')and(carga==False):
 		sg.popup('Empieza la CPU')
-	else:
+	elif(turno =='CPU')and(carga==True):
+		sg.popup('Continua la CPU')	
+	elif(turno=='Jugador')and(carga==False):
 		sg.popup('Empieza el Jugador')
+	else:
+		sg.popup('Continua el Jugador')	
 	while True and fin==False:
 		if(turno == 'Jugador')and(int(round(time.time()*100))-tiempoInicio<tiempoPartida):
 			event,values= window.Read(timeout=0)
@@ -278,11 +300,15 @@ def main(config):
 					turno='CPU'
 				elif(event=='POS'):
 					guardado = 'save.txt'
-					backUp=tabla.backUpTablero()
+					backUpTablero=tabla.backUpTablero()
+					backUpAtrilJugador=atrilJugador.backUpAtril()
+					backUpAtrilCPU=atrilCPU.backUpAtril()
 					with open(guardado,'wb')as archivo:
 						pickle.dump(nivel,archivo)#1°Guardo el nivel del juego.
 						pickle.dump(tab,archivo)#2°Guardo el tipo de tablero.
-						pickle.dump(backUp,archivo)#3° Guardo la visualizacion del tablero con las palabras puestas.
+						pickle.dump(backUpTablero,archivo)#3° Guardo la visualizacion del tablero con las palabras puestas.
+						pickle.dump(backUpAtrilJugador,archivo)
+						pickle.dump(backUpAtrilCPU,archivo)
 						pickle.dump(palabrasJugador,archivo)#4° Guardo las palabras acertadas por el jugador.
 						pickle.dump(palabrasCPU,archivo)#5° Guardo las palabras acertadas por la IA.
 						pickle.dump(totalJugador,archivo)#6° Guardo el puntaje del jugador.
@@ -290,7 +316,12 @@ def main(config):
 						pickle.dump(cambios,archivo)#8° Guardo la cantidad de cambios disponibles.
 						pickle.dump(tiempoInicio,archivo)#9° Guardo el tiempo de inicio de la partida.
 						pickle.dump(tiempoActual,archivo)#10° Guardo el tiempo actual de la partida.
-					sg.popup('Datos Guardados')					
+						pickle.dump(turno,archivo)
+						pickle.dump(fichasUsadas,archivo)
+						pickle.dump(acertadas,archivo)
+						pickle.dump(tiempoPartida,archivo)
+					sg.popup('Datos Guardados')
+					fin=True				
 			except(NameError):
 			#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
 				pass
@@ -366,7 +397,7 @@ def main(config):
 				window['TOT1'].update(totalCPU)
 				acertadas+=1
 				turno='Jugador'
-		elif(int(round(time.time()*100))-tiempoInicio>=tiempoPartida):
+		elif(int(round(time.time()*100))-tiempoInicio>=tiempoPartida)or(event=='FIN'):
 			window.Finalize()
 			if(totalJugador>totalCPU):
 				sg.popup('Ganaste')

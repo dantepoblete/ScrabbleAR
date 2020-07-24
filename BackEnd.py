@@ -27,17 +27,13 @@ class BackEnd():
 		   tablero del juego''' 
 		self.__backEnd=[[Casillero(j,i,asignarTipo(j,i,tab)) for i in range(15)] for j in range(15)]
 		self.__disponibles=[(j,i) for i in range(15) for j in range(15)]
+		self.__mainTablero=tab
 		
-	def getEstado(self,i,j):
-		'''Devuelve el estado de la casilla ubicada en la posición [i][j]'''
-		return self.__backEnd[i][j].getEstado()
-
 	def actualizarCasilla(self,i,j,letra,valor):
 		'''Una vez que es puesta la ficha, se actualizan el casillero'''
 		self.__backEnd[i][j].setLetra(letra)
 		self.__backEnd[i][j].setValor(valor)
-		self.__backEnd[i][j].setEstado(False)
-		self.__backEnd[i][j].setImagen(letra)
+		self.__backEnd[i][j].setImagen('./letras/'+letra+'.png')
 		self.__disponibles.remove((i,j))
 
 	def getCasilla(self,i,j):
@@ -58,10 +54,25 @@ class BackEnd():
 		'''La ficha es retirada del casillero y los valores de los atributos se restauran'''
 		self.__backEnd[i][j].setLetra('')
 		self.__backEnd[i][j].setValor(0)
-		self.__backEnd[i][j].setEstado(True)
 		self.__backEnd[i][j].restoreImagen()
 		self.__disponibles.append((i,j))
 		
 	def getDisponibles(self):
 		return 	self.__disponibles
+		
+	def backUpTablero(self):
+		backUp=dict()
+		for i in range(15):
+			for j in range(15):
+				if((i,j) not in self.__disponibles):
+					backUp.setdefault((i,j),self.getImagen(i,j))
+		return backUp
+		
+	def restaurarTablero(self,backUp):
+		for pos in backUp.keys():
+			self.__backEnd[pos[0]][pos[1]].setImagen(backUp[pos])
+			self.__disponibles.remove(pos)
+			
+			
+							
 		

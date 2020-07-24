@@ -1,10 +1,9 @@
 class Casillero():
-	'''Esta clase representa un casillero del tablero, posee 7 atributos:
+	'''Esta clase representa un casillero del tablero, posee 6 atributos:
 		pos:Indica la posicion del casillero.
 		tipo:Indica el tipo de casillero(premio,descuento,normal,inicio)
 		letra:Si se coloco una ficha, posee la letra correspondiente a la ficha.
 		valor:Es el valor de la ficha colocada.
-		estado:Si el casillero tiene una ficha puesta, es False, si esta libre,True.
 		imagenAnt,imagenAct:Poseen el nombre de la imagen del casillero antes y despues de colocarse una ficha.
 	'''	
 	def __init__(self,i,j,tipo):
@@ -12,7 +11,6 @@ class Casillero():
 		self.__tipo=tipo
 		self.__letra=''
 		self.__valor=0
-		self.__estado=True
 		self.__imagenAct='./img/'+self.__tipo+'.png'
 		self.__imagenAnt=''
 		
@@ -28,9 +26,9 @@ class Casillero():
 	def setEstado(self,estado):
 		self.__estado=estado
 		
-	def setImagen(self,letra):
+	def setImagen(self,imagen):
 		self.__imagenAnt=self.__imagenAct
-		self.__imagenAct='./letras/'+letra+'.png'	
+		self.__imagenAct=imagen
 		
 	def getLetra(self):
 		return self.__letra
@@ -49,4 +47,4 @@ class Casillero():
 	
 	def restoreImagen(self):
 		self.__imagenAct=self.__imagenAnt
-		self.__imagenAnt=''			
+		self.__imagenAnt=''	

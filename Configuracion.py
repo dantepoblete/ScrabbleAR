@@ -31,7 +31,6 @@ class Config():
 					   'L':[1,4],'LL':[8,1],'M':[3,3],'N':[1,5],'Ñ':[8,1],'O':[1,8],'P':[3,2],'Q':[8,1],'R':[1,4],'RR':[8,1],'S':[1,7],
 					   'T':[1,4],'U':[1,6],'V':[4,2],'W':[8,1],'X':[8,1],'Y':[4,1],'Z':[10,1]}
 		self.__tiempoPartida=8*6000
-		self.__cambios=3
 	
 	def getNivel(self):
 		return self.__nivel
@@ -56,12 +55,7 @@ class Config():
 		
 	def setTiempo(self,tiempo):
 		self.__tiempoPartida=tiempo*6000
-		
-	def getCambios(self):
-		return self.__cambios
-		
-	def setCambios(self,cambios):
-		self.__cambios=cambios					
+					
 
 background = sg.LOOK_AND_FEEL_TABLE['LightBlue']['BACKGROUND']
 
@@ -83,20 +77,18 @@ def main(configuracion):
 	selectCantidad = [[sg.Text('Cantidad')],[sg.Spin(values=cantidad, size=(3,1),initial_value=cantidad[0], key='CANT')]]
 	agregarFichas = [[sg.Button('Agregar Fichas',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='ADD')]]
 	selectTiempo=[[sg.Slider(range=(1,15), orientation='h', size=(30, 20), enable_events=True, default_value=8, key='TIME')]]
-	selectCambios=[[sg.Slider(range=(1,5), orientation='h', size=(30, 20), enable_events=True, default_value=3, key='CAMB')]]
 	panelUno = [[sg.Column(selectLetras),sg.Column(selectValores),sg.Column(selectCantidad)],[sg.Column(agregarFichas)]]
 
 	configUno = [[sg.Frame('Configurar Nivel',niveles)]]
 	configDos = [[sg.Frame('Configurar Fichas',panelUno)]]
 	configTres = [[sg.Frame('Configurar Tiempo de Juego (en minutos)',selectTiempo)]]
-	configCuatro = [[sg.Frame('Configurar Cambios',selectCambios)]]
 	
 	opciones = [[sg.Button('Aceptar',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key ='OK'),
 				sg.Button('Cancelar',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key ='CANCEL'),
 				sg.Button('Predeterminado',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key ='DEFAULT')
 			  ]]
 	
-	layout = [[sg.Column(configUno)],[sg.Column(configDos)],[sg.Column(configTres)],[sg.Column(configCuatro)],[sg.Column(opciones)]]
+	layout = [[sg.Column(configUno)],[sg.Column(configDos)],[sg.Column(configTres)],[sg.Column(opciones)]]
 
 	window= sg.Window('Configuracion ScrabbleAR',layout, use_default_focus=False)
 	
@@ -115,10 +107,8 @@ def main(configuracion):
 			configuracion.setFichas(values['LET'],values['VAL'],values['CANT'])
 		elif(event=='TIME'):
 			configuracion.setTiempo(values['TIME'])
-		elif(event=='CAMB'):
-			configuracion.setCambios(round(values['CAMB']))
 		elif(event=='OK'):
-			sg.popup('La cofiguracion fue guardada con exito')
+			sg.popup('La configuración fue guardada con éxito')
 			break
 		elif(event=='CANCEL')or(event=='DEFAULT'):
 			configuracion=Config()

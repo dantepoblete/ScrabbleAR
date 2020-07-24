@@ -30,6 +30,13 @@ def main(args):
 			Game.main(configGame)
 		elif event == '-config-':
 			Configuracion.main(configGame)
+		elif event == '-load-':
+			try:
+				archivo=open('save.txt')
+				sg.change_look_and_feel('DarkBlue2')
+				Game.main(configGame,True)
+			except(FileNotFoundError):
+				sg.popup('No hay partidas guardadas')		
 		elif event == '-info-':
 			webbrowser.open('https://github.com/dantepoblete/ScrabbleAR', new = 2)	
 

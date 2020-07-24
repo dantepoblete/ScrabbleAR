@@ -1,4 +1,5 @@
 from Bolsa import Bolsa
+from Ficha import Ficha
 
 class Atril:
 	def __init__(self,dic):
@@ -38,5 +39,19 @@ class Atril:
 	def cambiarFichas(self,fichas):
 		self.completarAtril(fichas)
 		for i in fichas:
-	   		self.__bolsa.agregar_Bolsa(self.getLetra(i),1)
+	   		self.__bolsa.agregar_Bolsa(self.getLetra(i),self.getValor(i),1)
+	   		
+	def backUpAtril(self):
+		backUpAtril=[]
+		for ficha in self.__bolsa.getFichas():
+			backUpAtril.append((ficha.getLetra(),ficha.getValor))
+		for ficha in reversed(self.__listaFichas):
+			backUpAtril.append((ficha.getLetra(),ficha.getValor()))
+		return backUpAtril
+		
+	def restaurarAtril(self,backUpAtril):
+		fichas=[Ficha(ficha[0],ficha[1]) for ficha in backUpAtril]
+		self.__bolsa.setBolsa(fichas)	
+			
+					   		
 		
