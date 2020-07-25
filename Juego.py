@@ -104,7 +104,7 @@ def main(config,carga=False,):
 					descuento+=2
 				else:
 					descuento+=3
-			total = total + valor
+			total += valor
 		if(DP > 0):
 			total = total * 2 * DP
 		if(TP > 0):
