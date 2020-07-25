@@ -44,7 +44,7 @@ class Atril:
 	def backUpAtril(self):
 		backUpAtril=[]
 		for ficha in self.__bolsa.getFichas():
-			backUpAtril.append((ficha.getLetra(),ficha.getValor))
+			backUpAtril.append((ficha.getLetra(),ficha.getValor()))
 		for ficha in reversed(self.__listaFichas):
 			backUpAtril.append((ficha.getLetra(),ficha.getValor()))
 		return backUpAtril
