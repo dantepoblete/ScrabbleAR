@@ -4,6 +4,7 @@ from BackEnd import BackEnd
 from palabra_Valida import clasificar, palabra_Valida
 import random
 import time
+import os
 import pickle
 
 background = sg.LOOK_AND_FEEL_TABLE['DarkBlue2']['BACKGROUND']
@@ -316,6 +317,7 @@ def main(config,carga=False):
 						window['cambiar'].SetTooltip('Ya no posee cambios a utilizar')
 					turno='CPU'
 				elif(event=='POS'):
+					os.mkdir('save')
 					guardado = './save/PartidaGuardada.pckl'
 					#Guardo en un diccionario todas las variables escenciales del juego con sus respectivos valores al momento.
 					backUp={'saveTablero':tabla.backUpTablero(),'saveAtrilJug':atrilJugador.backUpAtril(),'saveAtrilCPU':atrilCPU.backUpAtril(),
