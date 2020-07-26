@@ -127,9 +127,9 @@ def main(config,carga=False):
 			recover = pickle.load(archivo)
 			nivel = recover['nivel']
 			mainTab = recover['mainTab']
-			load_Tablero = recover['saveTablero']
-			load_AtrilJugador = recover['saveAtrilJug']
-			load_AtrilCPU = recover['saveAtrilCPU']
+			tabla = recover['saveTablero']
+			atrilJugador = recover['saveAtrilJug']
+			atrilCPU = recover['saveAtrilCPU']
 			palabrasJugador = recover['palabrasJug']
 			palabrasCPU = recover['palabrasCPU']
 			totalJugador = recover['totalJug']
@@ -141,14 +141,6 @@ def main(config,carga=False):
 			acertadas = recover['acertadas']
 			tiempoPartida = recover['tiempoPartida']
 			nombre = recover['nombre']
-			tabla = BackEnd(mainTab)
-			tabla.restaurarTablero(load_Tablero)
-			atrilJugador = Atril(config.getFichas())
-			atrilJugador.restaurarAtril(load_AtrilJugador)
-			atrilJugador.inicializarAtril()
-			atrilCPU = Atril(config.getFichas())
-			atrilCPU.restaurarAtril(load_AtrilCPU)
-			atrilCPU.inicializarAtril()
 			tiempoInicio=int(round(time.time()*100))-tiempoActual
 	else:		
 		turno=random.choice(['CPU','Jugador'])
@@ -317,10 +309,13 @@ def main(config,carga=False):
 						window['cambiar'].SetTooltip('Ya no posee cambios a utilizar')
 					turno='CPU'
 				elif(event=='POS'):
-					os.mkdir('save')
+					try:
+						os.mkdir('save')
+					except(FileExistsError):
+						pass
 					guardado = './save/PartidaGuardada.pckl'
 					#Guardo en un diccionario todas las variables escenciales del juego con sus respectivos valores al momento.
-					backUp={'saveTablero':tabla.backUpTablero(),'saveAtrilJug':atrilJugador.backUpAtril(),'saveAtrilCPU':atrilCPU.backUpAtril(),
+					backUp={'saveTablero':tabla,'saveAtrilJug':atrilJugador,'saveAtrilCPU':atrilCPU,
 							'nivel':nivel,'mainTab':mainTab,'palabrasJug':palabrasJugador,'palabrasCPU':palabrasCPU,'totalJug':totalJugador,'totalCPU':totalCPU,
 							'cambios':cambios,'tiempoPartida':tiempoPartida,'tiempoActual':tiempoActual,'turno':turno,
 							'fichasUsadas':fichasUsadas,'acertadas':acertadas,'nombre':nombre}
