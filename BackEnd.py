@@ -59,20 +59,5 @@ class BackEnd():
 		
 	def getDisponibles(self):
 		return 	self.__disponibles
-		
-	def backUpTablero(self):
-		backUp=dict()
-		for i in range(15):
-			for j in range(15):
-				if((i,j) not in self.__disponibles):
-					backUp.setdefault((i,j),self.getImagen(i,j))
-		return backUp
-		
-	def restaurarTablero(self,backUp):
-		for pos in backUp.keys():
-			self.__backEnd[pos[0]][pos[1]].setImagen(backUp[pos])
-			self.__disponibles.remove(pos)
-			
-			
 							
 		
