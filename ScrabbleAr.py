@@ -21,20 +21,6 @@ def main(args):
 
 	menu = sg.Window('Menu Principal', panel, use_default_focus=False)
 	
-	opcionCarga=[[sg.Text('Hay una partida guardada de un juego anterior.\n ¿Desea cargarla?')],
-				[sg.Button('Cargar',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='-load-'),
-				 sg.Button('Cancelar',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='-cancel-')]
-			   ]
-			  
-	carga=sg.Window('Continuar Partida',opcionCarga, use_default_focus=False)
-	
-	def cargarPartida():
-		event,values=carga.Read(close=True)
-		if event == '-load-':
-			return True
-		elif event == '-cancel-':
-			return False						   
-	
 	configGame=Config()	#Configuracion por defecto del juego.
 	
 	while True:
@@ -42,9 +28,15 @@ def main(args):
 		if event == '-play-':
 			try:
 				open('./save/PartidaGuardada.pckl')
-				Game.main(configGame,cargarPartida())
+				opcion = sg.PopupYesNo('Hay una partida guardada de un juego en progreso.\n¿Desea cargarla?',title='Cargar Partida')
+				if(opcion == 'Yes'):
+					Game.main(configGame,True)
+				else:
+					Game.main(configGame)	
 			except(FileNotFoundError):
 				Game.main(configGame)
+			finally:
+				sg.change_look_and_feel('LightBlue')			
 		elif event == '-config-':
 			Configuracion.main(configGame)
 		elif event == '-exit-':

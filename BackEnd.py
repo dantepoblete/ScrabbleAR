@@ -27,13 +27,12 @@ class BackEnd():
 		   tablero del juego''' 
 		self.__backEnd=[[Casillero(j,i,asignarTipo(j,i,tab)) for i in range(15)] for j in range(15)]
 		self.__disponibles=[(j,i) for i in range(15) for j in range(15)]
-		self.__mainTablero=tab
 		
-	def actualizarCasilla(self,i,j,letra,valor):
+	def actualizarCasilla(self,i,j,ficha):
 		'''Una vez que es puesta la ficha, se actualizan el casillero'''
-		self.__backEnd[i][j].setLetra(letra)
-		self.__backEnd[i][j].setValor(valor)
-		self.__backEnd[i][j].setImagen('./letras/'+letra+'.png')
+		self.__backEnd[i][j].setLetra(ficha.getLetra())
+		self.__backEnd[i][j].setValor(ficha.getValor())
+		self.__backEnd[i][j].setImagen(ficha.getImage())
 		self.__disponibles.remove((i,j))
 
 	def getCasilla(self,i,j):
@@ -59,5 +58,7 @@ class BackEnd():
 		
 	def getDisponibles(self):
 		return 	self.__disponibles
+			
+			
 							
 		

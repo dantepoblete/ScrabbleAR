@@ -32,11 +32,6 @@ def agregarDescripcion(i,j,tab):
 def place(elem):
     return sg.Column([[elem]], pad=(0,0))
 
-def ponerFicha(event,ficha):
-	tabla.actualizarCasilla(event[0],event[1],ficha.getLetra(),ficha.getValor())
-	window[event].update(image_filename=tabla.getImagen(event[0],event[1]))
-	window[clave].update(visible=False)
-	
 def definirOrientacion(event,posActual):
 	if(event[0] == posActual[0] + 1):
 		vertical = [(event[0] + 1,event[1])]
@@ -45,13 +40,24 @@ def definirOrientacion(event,posActual):
 		horizontal = [(event[0],event[1] + 1)]
 		return horizontal
 		
+def resultadoFinal(totalJugador,totalCPU):
+		if(totalJugador>totalCPU):
+			for i in range(400000):
+				sg.PopupAnimated(image_source='./img/WIN.gif',message='¡FELICIDADES, GANASTE LA PARTIDA!',time_between_frames=370)
+		elif(totalJugador<totalCPU):
+			for i in range(400000):
+				sg.PopupAnimated(image_source='./img/LOSE.gif',message='HAS PERDIDO, MEJOR SUERTE LA PROXIMA',time_between_frames=370)
+		else:
+			for i in range(400000):
+				sg.PopupAnimated(image_source='./img/TIE.gif',message='¡EMPATASTE, BIEN JUGADO!',time_between_frames=370)
+		sg.PopupAnimated(None)
 		
 def main(config,carga=False):
 	
 	sg.change_look_and_feel('DarkBlue2')
 	
 	def ponerFicha(event,ficha):
-		tabla.actualizarCasilla(event[0],event[1],ficha.getLetra(),ficha.getValor())
+		tabla.actualizarCasilla(event[0],event[1],ficha)
 		window[event].update(image_filename=tabla.getImagen(event[0],event[1]))
 		window[clave].update(visible=False)
 		
@@ -116,10 +122,10 @@ def main(config,carga=False):
 		return total
 		
 	layout2=[[sg.Text('Ingrese el nombre de Jugador:')],
-			 [sg.InputText(key='NAME')],
+			 [sg.InputText(key='NAME', size=(30,1))],
 			 [sg.Button('Aceptar',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='OK')]
 			]
-	ingresoNombre=sg.Window('Ingrese su nombre', layout2, use_default_focus=False)
+	ingresoNombre=sg.Window('Nueva Partida', layout2, use_default_focus=False)
 		
 	if(carga==True):
 		guardado = './save/PartidaGuardada.pckl'
@@ -191,8 +197,8 @@ def main(config,carga=False):
 	contadorJugador = [[sg.Text(totalJugador, size=(3,1), key='TOT2')]]
 	venCPU = [[sg.Listbox(values=palabrasCPU, size=(20,4), key='LIS1')]]
 	venJugador = [[sg.Listbox(values=palabrasJugador, size=(20,4), key='LIS2')]]
-	ven2 = [[sg.Frame('Palabras Acertadas CPU',venCPU)],[sg.Frame('Total Puntos CPU',contadorCPU)]]
-	ven = [[sg.Frame('Palabras Acertadas de '+nombre,venJugador)],[sg.Frame('Total Puntos de '+nombre,contadorJugador)]]
+	ven2 = [[sg.Frame('Aciertos CPU',venCPU)],[sg.Frame('Puntaje CPU',contadorCPU)]]
+	ven = [[sg.Frame('Aciertos de '+nombre,venJugador)],[sg.Frame('Puntaje de '+nombre,contadorJugador)]]
 	Botones2 = [[sg.Button('Posponer Partida',image_filename='./img/POS.png',image_size=(120,27),button_color=('white',background),border_width=0, key='POS')],
 				[sg.Button('Finalizar Partida',image_filename='./img/FIN.png',image_size=(120,27),button_color=('white',background),border_width=0, key='FIN')]
 				]
@@ -284,21 +290,21 @@ def main(config,carga=False):
 					palabra = []
 					posFichas=[]
 				elif(event =='cambiar')and(cambios>0):
-					sg.popup('Seleccione las fichas a cambiar,confirme con el boton Cambiar Fichas')
+					sg.PopupQuickMessage('Seleccione las fichas a cambiar,confirme con el boton Cambiar Fichas')
 					elegidas=[]
 					ok=True
 					while(ok == True):
 						clave,values=window.read()
 						if(type(clave) == int):
 							if(clave in elegidas):
-								sg.popup('Ya se agrego')
+								sg.PopupQuickMessage('Ya se agrego')
 							else:
 								elegidas.append(clave)
 						elif(clave=='cambiar'):
 							ok=False
 						elif(type(clave)!=int)and(clave!='cambiar'):
 							print(type(clave))
-							sg.popup('Seleccione una ficha válida')	
+							sg.PopupQuickMessage('Seleccione una ficha válida')	
 					atrilJugador.cambiarFichas(elegidas)
 					for i in elegidas:
 						window[i].update(image_filename=atrilJugador.getImagen(i))
@@ -312,7 +318,7 @@ def main(config,carga=False):
 					try:
 						os.mkdir('save')
 					except(FileExistsError):
-						pass
+						pass	
 					guardado = './save/PartidaGuardada.pckl'
 					#Guardo en un diccionario todas las variables escenciales del juego con sus respectivos valores al momento.
 					backUp={'saveTablero':tabla,'saveAtrilJug':atrilJugador,'saveAtrilCPU':atrilCPU,
@@ -322,7 +328,10 @@ def main(config,carga=False):
 					with open(guardado,'wb')as archivo:
 						pickle.dump(backUp,archivo)
 					sg.popup('Datos Guardados')
-					fin=True				
+					fin=True
+				elif(event=='FIN'):
+					resultadoFinal(totalJugador,totalCPU)
+					fin=True						
 			except(NameError):
 				pass	#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
 		elif(turno == 'CPU')and(int(round(time.time()*100))-tiempoInicio<tiempoPartida):
@@ -351,14 +360,14 @@ def main(config,carga=False):
 				else:
 					i+=1
 			if(valida==None):
-				sg.popup('El oponente pasa de turno')#Si ninguna combinacion genero una palabra valida, paso de turno
+				sg.PopupQuickMessage('El oponente pasa de turno')#Si ninguna combinacion genero una palabra valida, paso de turno
 				turno='Jugador'
 			else:
 				if(acertadas==0):#Si el primer turno del juego corresponde a la CPU o aun no hay fichas colocadas en el tablero
 					orientacion = random.choice(['Horizontal','Vertical'])#Elijo la orientacion de la palabra a poner en el atril
 					pos=(7,7)#La posicion inicial es (7,7)
 					for ficha in valida:
-						tabla.actualizarCasilla(pos[0],pos[1],ficha.getLetra(),ficha.getValor())
+						tabla.actualizarCasilla(pos[0],pos[1],ficha)
 						window[pos].update(image_filename=tabla.getImagen(pos[0],pos[1]))
 						datos.append(tabla.getCasilla(pos[0],pos[1]))
 						atrilCPU.quitarFicha(ficha)#Quito la ficha del atril del CPU
@@ -378,7 +387,7 @@ def main(config,carga=False):
 					else:	#Si la palabra puede colocarse en horizontal, se elige esa orientacion
 						orientacion='Vertical'
 					for ficha in valida:
-						tabla.actualizarCasilla(pos[0],pos[1],ficha.getLetra(),ficha.getValor())
+						tabla.actualizarCasilla(pos[0],pos[1],ficha)
 						window[pos].update(image_filename=tabla.getImagen(pos[0],pos[1]))
 						datos.append(tabla.getCasilla(pos[0],pos[1]))
 						atrilCPU.quitarFicha(ficha)
@@ -397,16 +406,9 @@ def main(config,carga=False):
 				window['TOT1'].update(totalCPU)
 				acertadas+=1
 				turno='Jugador'
-		elif(int(round(time.time()*100))-tiempoInicio>=tiempoPartida)or(event=='FIN'):
-			window.Finalize()
-			if(totalJugador>totalCPU):
-				sg.popup('Ganaste')
-			elif(totalJugador==totalCPU):
-				sg.popup('Empate')
-			else:
-				sg.popup('Perdiste')
-			fin=True							
+		elif(int(round(time.time()*100))-tiempoInicio>=tiempoPartida):
+			resultadoFinal(totalJugador,totalCPU)
+			fin=True
 	window.Close()
-	
 if __name__ == '__main__':
     main()				
