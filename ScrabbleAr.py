@@ -29,12 +29,10 @@ def main(args):
 	carga=sg.Window('Continuar Partida',opcionCarga, use_default_focus=False)
 	
 	def cargarPartida():
-		event,values=carga.Read()
+		event,values=carga.Read(close=True)
 		if event == '-load-':
-			carga.Close()
 			return True
 		elif event == '-cancel-':
-			carga.Close()
 			return False						   
 	
 	configGame=Config()	#Configuracion por defecto del juego.
@@ -44,11 +42,7 @@ def main(args):
 		if event == '-play-':
 			try:
 				open('./save/PartidaGuardada.pckl')
-				eleccion=cargarPartida()
-				if eleccion == True:
-					Game.main(configGame,True)
-				else:
-					Game.main(configGame)
+				Game.main(configGame,cargarPartida())
 			except(FileNotFoundError):
 				Game.main(configGame)
 		elif event == '-config-':
