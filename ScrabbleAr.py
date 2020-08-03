@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 import Juego as Game
 import Configuracion as Configuracion
 from Configuracion import Config
+from TopTen import Top
 import webbrowser
 
 sg.change_look_and_feel('LightBlue')
@@ -41,8 +42,12 @@ def main(args):
 			Configuracion.main(configGame)
 		elif event == '-exit-':
 			break
+		elif event == '-scores-':
+			Top.main()
 		elif event == '-info-':
 			webbrowser.open('https://github.com/dantepoblete/ScrabbleAR', new = 2)	
+		
+      
 
 if __name__ == '__main__':
     import sys
