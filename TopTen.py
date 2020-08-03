@@ -4,26 +4,25 @@ from time import  strftime
 
 background = sg.LOOK_AND_FEEL_TABLE['DarkBlue']['BACKGROUND']             
 
-
 class Top():
     """ Clase que maneja el ranking de jugadores ordenaos por puntajes"""
-    def __init__(self,filepath):
-        self.__filepath = filepath
+    def __init__(self,file):
+        self.__file = file
         self.__top10 = []
 
-    def filepath(self):
-        return self.__filepath
+    def file(self):
+        return self.__file
 
     def crearArchivo(self):
         try:
             #Si el archivo existe
-            file = open(self.__filepath,"r")
+            file = open(self.__file,"r")
             data = json.load(file)
             self.__top10 = data
             file.close()
         except:
             #Si el archivo no existe
-            file = open(self.__filepath,"x")
+            file = open(self.__file,"x")
             file.close()
         finally:
             return self.__top10
@@ -33,7 +32,7 @@ class Top():
         """Agrega al archivo los datos del jugador """
         puntajes = self.crearArchivo()
         if(len(puntajes) < 10):
-            file = open(self.__filepath,"w")
+            file = open(self.__file,"w")
             puntaje = {
                 "jugador": jugador,
                 "fecha": strftime("%d/%m/%Y"),
@@ -45,7 +44,7 @@ class Top():
             json.dump(puntajes,file,indent=4)               
             file.close()
         else:
-            file = open(self.__filepath,"w")
+            file = open(self.__file,"w")
             puntaje = {
                  "jugador":jugador,
                  "fecha": strftime("%d/%m/%Y"),
@@ -67,7 +66,7 @@ class Top():
         col_puntaje =[[sg.Text("PUNTAJE",text_color='white',background_color= background)]]
         col_nivel = [[sg.Text("NIVEL",text_color='white',background_color= background)]]
         col_fecha = [[sg.Text("FECHA",text_color='white',background_color=background)]]
-        ##Se agrega de forma dinamica los datos correspondientes a cada columna
+        ##Se agregan los datos correspondientes a cada columna
         for p in puntajes:
             col_nombre.append([sg.Text(p["jugador"])])
             col_puntaje.append([sg.Text(str(p["puntaje"]))])
@@ -91,5 +90,3 @@ class Top():
            
     if __name__ == '__main__':
         main()
-   
-  
