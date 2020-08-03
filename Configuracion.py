@@ -16,7 +16,9 @@ tableros={'facil':{'posDobleLetra':[(2,2),(4,4),(6,6),(2,12),(4,10),(6,8),(8,6),
 				'posMenosDos':[(0,7),(3,3),(3,11),(11,3),(11,11),(14,7)],
 				'posMenosTres':[(2,7),(7,1),(7,13),(12,7)],
 				'posInicial':[(7,7)]}
-		}	
+		}
+
+ranking={'facil' : ("TopFacil.json"),'medio':("TopMedio.json"),'dificil':("TopDificil.json"),'general':("TopNiveles.json")}
 			 
 class Config():
 	'''Esta clase contiene los tres campos configurables con valores predeterminados los cuales son:
@@ -31,6 +33,8 @@ class Config():
 					   'L':[1,4],'LL':[8,1],'M':[3,3],'N':[1,5],'Ñ':[8,1],'O':[1,8],'P':[3,2],'Q':[8,1],'R':[1,4],'RR':[8,1],'S':[1,7],
 					   'T':[1,4],'U':[1,6],'V':[4,2],'W':[8,1],'X':[8,1],'Y':[4,1],'Z':[10,1]}
 		self.__tiempoPartida=8*6000
+		self.__topGeneral= ranking['general']
+		self.__topNivel= ranking[self.__nivel]
 	
 	def getNivel(self):
 		return self.__nivel
@@ -55,8 +59,20 @@ class Config():
 		
 	def setTiempo(self,tiempo):
 		self.__tiempoPartida=tiempo*6000
-					
-
+ 
+	def getTopNivel(self):
+ 	    return self.__topNivel
+	
+	def getTopNivel2(self,nivel):
+		return ranking[self.__nivel]
+	
+	def setTopNivel(self,nivel):
+		self.__topNivel=ranking[nivel]
+  
+	def getTopGeneral(self):
+		return self.__topGeneral
+	
+ 
 background = sg.LOOK_AND_FEEL_TABLE['LightBlue']['BACKGROUND']
 
 letras = ('A','B','C','D','E','F','G','H','I','J','K','L','LL','M','N','Ñ','O','P','Q','R','RR','S','T','U','V','W','X','Y','Z')
@@ -64,7 +80,6 @@ letras = ('A','B','C','D','E','F','G','H','I','J','K','L','LL','M','N','Ñ','O',
 valores = (1,2,3,4,6,8,10)
 
 cantidad = (1,2,3,4,5,6,7,8,9,10,11)
-
 
 def main(configuracion):
 	niveles = [[sg.Button('Facil',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='EASY'),
@@ -91,18 +106,20 @@ def main(configuracion):
 	layout = [[sg.Column(configUno)],[sg.Column(configDos)],[sg.Column(configTres)],[sg.Column(opciones)]]
 
 	window= sg.Window('Configuracion ScrabbleAR',layout, use_default_focus=False)
-	
 	while True:
 		event,values=window.Read()
 		if(event=='EASY'):
 			configuracion.setNivel('facil')
 			configuracion.setTablero('facil')
+			configuracion.setTopNivel('facil')
 		elif(event=='MID'):
 			configuracion.setNivel('medio')	
 			configuracion.setTablero('medio')
+			configuracion.setTopNivel('medio')
 		elif(event=='HARD'):
 			configuracion.setNivel('medio')
 			configuracion.setTablero('medio')
+			configuracion.setTopNivel('medio')
 		elif(event=='ADD'):
 			configuracion.setFichas(values['LET'],values['VAL'],values['CANT'])
 		elif(event=='TIME'):
@@ -117,6 +134,6 @@ def main(configuracion):
 			break	
 			
 	window.Close()
-			
+		
 if __name__ == '__main__':
     main()
