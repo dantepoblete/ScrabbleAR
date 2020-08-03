@@ -161,9 +161,7 @@ def main(config,carga=False):
 		atrilJugador = Atril(config.getFichas())
 		atrilJugador.inicializarAtril()
 		atrilCPU = Atril(config.getFichas())
-		atrilCPU.inicializarAtril()
-		topGeneral=Top(config.getTopGeneral())
-		topNivel=Top(config.getTopNivel())		
+		atrilCPU.inicializarAtril()		
 		palabrasJugador=[]
 		palabrasCPU=[]
 		totalCPU=0
@@ -182,7 +180,9 @@ def main(config,carga=False):
 	posSiguiente = []
 	palabra = []
 	posFichas =[]
-	infoCambio='Le quedan '+str(cambios)+' cambios a utilizar'	
+	infoCambio='Le quedan '+str(cambios)+' cambios a utilizar'
+	topGeneral=Top(config.getTopGeneral())
+	topNivel=Top(config.getTopNivel())	
     	
 	tablero = [[sg.Button(tooltip=agregarDescripcion(i,j,mainTab), image_filename=tabla.getImagen(i,j), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(15)] for i in range(15)]
 	
@@ -332,8 +332,8 @@ def main(config,carga=False):
 					sg.popup('Datos Guardados')
 					fin=True
 				elif(event=='FIN'):
-					topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel)
-					topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel)
+					topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
+					topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
 					resultadoFinal(totalJugador,totalCPU)
 					fin=True						
 			except(NameError):
@@ -411,8 +411,8 @@ def main(config,carga=False):
 				acertadas+=1
 				turno='Jugador'
 		elif(int(round(time.time()*100))-tiempoInicio>=tiempoPartida):
-			topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel)
-			topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel)
+			topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
+			topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
 			resultadoFinal(totalJugador,totalCPU)
 			fin=True
 	window.Close()
