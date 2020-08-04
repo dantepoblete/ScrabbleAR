@@ -96,23 +96,20 @@ def main(config,carga=False):
 		for letra in palabra:
 			valor=letra.getValor()
 			tipo=letra.getTipo()
-			if(tipo == ('DL' or 'TL')):
-				if(tipo =='DL'):
-					valor = valor * 2
-				else:
-					valor = valor * 3		
-			elif(tipo == ('DP' or 'TP')):
-				if(tipo =='DL'):
-					DP += 1
-				else:
-					TP+=1
-			elif(tipo == ('P1' or 'P2' or 'P3')):
-				if(tipo=='P1'):
-					descuento+=1
-				elif(tipo=='P2'):
-					descuento+=2
-				else:
-					descuento+=3
+			if(tipo =='DL'):
+				valor = valor * 2
+			elif(tipo =='TL'):
+				valor = valor * 3
+			elif(tipo =='DP'):
+				DP += 1
+			elif(tipo== 'TP' ):
+				TP += 1
+			if(tipo=='P1'):
+				descuento += 1
+			elif(tipo=='P2'):
+				descuento += 2
+			elif(tipo=='P3'):
+				descuento+=3
 			total += valor
 		if(DP > 0):
 			total = total * 2 * DP
