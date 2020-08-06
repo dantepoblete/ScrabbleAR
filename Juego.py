@@ -145,6 +145,7 @@ def main(config,carga=False):
 			acertadas = recover['acertadas']
 			tiempoPartida = recover['tiempoPartida']
 			nombre = recover['nombre']
+			topNivel= recover['rankingNivel']
 			tiempoInicio=int(round(time.time()*100))-tiempoActual
 	else:		
 		turno=random.choice(['CPU','Jugador'])
@@ -157,6 +158,7 @@ def main(config,carga=False):
 		tiempoPartida = config.getTiempo()
 		atrilJugador = Atril(config.getFichas())
 		atrilJugador.inicializarAtril()
+		topNivel=Top(config.getTopNivel())
 		atrilCPU = Atril(config.getFichas())
 		atrilCPU.inicializarAtril()		
 		palabrasJugador=[]
@@ -178,8 +180,7 @@ def main(config,carga=False):
 	palabra = []
 	posFichas =[]
 	infoCambio='Le quedan '+str(cambios)+' cambios a utilizar'
-	topGeneral=Top(config.getTopGeneral())
-	topNivel=Top(config.getTopNivel())	
+	topGeneral=Top(config.getTopGeneral())	
     	
 	tablero = [[sg.Button(tooltip=agregarDescripcion(i,j,mainTab), image_filename=tabla.getImagen(i,j), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(15)] for i in range(15)]
 	
@@ -201,8 +202,14 @@ def main(config,carga=False):
 	Botones2 = [[sg.Button('Posponer Partida',image_filename='./img/POS.png',image_size=(120,27),button_color=('white',background),border_width=0, key='POS')],
 				[sg.Button('Finalizar Partida',image_filename='./img/FIN.png',image_size=(120,27),button_color=('white',background),border_width=0, key='FIN')]
 				]
-	logo = [[sg.Image(filename = './img/MINI.png', size = (128,76), background_color =background,key='MINI')]]
-	
+	if(nivel == 'facil'):
+		 infoNivel= sg.Text( 'Nivel '+ nivel.upper(),text_color='LightBlue',tooltip='AYUDA: Solo puede usar  adjetivos,sustantivos y verbos')
+	else:
+		infoNivel= sg.Text('Nivel ' + nivel.upper(),text_color='LightBlue', tooltip='AYUDA: Solo puede usar adjetivos y verbos')	
+ 
+	logo = [[sg.Image(filename = './img/MINI.png', size = (128,76), background_color =background,key='MINI')],
+			[infoNivel]]
+ 
 	datos= [[sg.Column(logo,justification='center')],[sg.Column(ven2)],[sg.Column(ven)],[sg.Column(Botones2)]]
 	Interfaz = [[sg.Column(CPU)],[sg.Column(tablero),sg.Column(datos)],[sg.Column(Jugador),sg.Column(Botones)]]     
 	
@@ -323,7 +330,7 @@ def main(config,carga=False):
 					backUp={'saveTablero':tabla,'saveAtrilJug':atrilJugador,'saveAtrilCPU':atrilCPU,
 							'nivel':nivel,'mainTab':mainTab,'palabrasJug':palabrasJugador,'palabrasCPU':palabrasCPU,'totalJug':totalJugador,'totalCPU':totalCPU,
 							'cambios':cambios,'tiempoPartida':tiempoPartida,'tiempoActual':tiempoActual,'turno':turno,
-							'fichasUsadas':fichasUsadas,'acertadas':acertadas,'nombre':nombre}
+							'fichasUsadas':fichasUsadas,'acertadas':acertadas,'nombre':nombre,'rankingNivel': topNivel}
 					with open(guardado,'wb')as archivo:
 						pickle.dump(backUp,archivo)
 					sg.popup('Datos Guardados')
@@ -407,7 +414,7 @@ def main(config,carga=False):
 				window['TOT1'].update(totalCPU)
 				acertadas+=1
 				turno='Jugador'
-		elif(int(round(time.time()*100))-tiempoInicio>=tiempoPartida):
+		elif(int(round(time.time()*100))-tiempoInicio>=tiempoPartida): #Si se termino el tiempo actualizo los rankings y muestro el resultado final
 			topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
 			topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
 			resultadoFinal(totalJugador,totalCPU)
