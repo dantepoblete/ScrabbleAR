@@ -184,7 +184,7 @@ def main(config,carga=False):
     	
 	tablero = [[sg.Button(tooltip=agregarDescripcion(i,j,mainTab), image_filename=tabla.getImagen(i,j), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(15)] for i in range(15)]
 	
-	CPU = [[sg.Button(image_filename='./letras/NN.png', image_size=(30,30),pad=(0,0), key='?') for i in range(7)]]
+	CPU = [[sg.Button(image_filename='./letras/NN.png', image_size=(30,30),pad=(0,0), key=str(i)) for i in range(7)]]
 	
 	Jugador = [[place(sg.Button(image_filename=atrilJugador.getImagen(i), image_size=(30,30),key = int(i), pad = (0,0)))for i in range(7)]]
 	
@@ -217,17 +217,15 @@ def main(config,carga=False):
 	
 	if(turno == 'CPU')and(carga==False):
 		sg.popup('Empieza la CPU')
-	elif(turno =='CPU')and(carga==True):
-		sg.popup('Continua la CPU')	
 	elif(turno=='Jugador')and(carga==False):
 		sg.popup('Empieza '+nombre)
 	else:
 		sg.popup('Continua '+nombre)	
-	while True and fin==False:
+	while True:
 		if(turno == 'Jugador')and(int(round(time.time()*100))-tiempoInicio<tiempoPartida):
 			event,values= window.Read(timeout=0)
 			tiempoActual=int(round(time.time()*100))-tiempoInicio
-			window['TIME'].update('     Tiempo de Partida: {:02d}:{:02d}'.format((tiempoActual // 100) // 60,(tiempoActual // 100) % 60))
+			window['TIME'].update('     Tiempo de Partida: {:02d}:{:02d}'.format((tiempoActual//100)//60,(tiempoActual//100)%60))
 			try:
 				if(type(event) == tuple):
 					if(fichasUsadas == 0)and(event[0] == 7)and(event[1] == 7)and(clave!=None):
@@ -274,7 +272,7 @@ def main(config,carga=False):
 						word=word+letra.getLetra().lower()
 						pos.append(letra.getPos())
 					if(palabra_Valida(word,nivel)):
-						atrilJugador.completarAtril(posFichas)
+						noRepuestas=atrilJugador.completarAtril(posFichas)
 						puntos = calcularPuntaje(palabra)
 						totalJugador+=puntos
 						palabrasJugador.append((word.upper(),puntos))
@@ -284,7 +282,17 @@ def main(config,carga=False):
 							window[i].update(image_filename=atrilJugador.getImagen(i))
 							window[i].update(visible=True)
 						acertadas = acertadas + 1
-						turno = 'CPU'				
+						if(atrilJugador.finalizarAtril()):
+							for j in range(7):
+								window[str(j)].update(image_filename=atrilCPU.getImagen(j))
+							totalJugador-=atrilJugador.puntajeFinal(noRepuestas)
+							totCPU-=atrilCPU.puntajeFinal([])					
+							topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
+							topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
+							window['TOT1'].update(totalCPU)
+							window['TOT2'].update(totalJugador)
+							resultadoFinal(totalJugador,totalCPU)
+							break			
 					else:
 						for i in posFichas:
 							window[i].update(visible=True)
@@ -334,12 +342,12 @@ def main(config,carga=False):
 					with open(guardado,'wb')as archivo:
 						pickle.dump(backUp,archivo)
 					sg.popup('Datos Guardados')
-					fin=True
+					break
 				elif(event=='FIN'):
 					topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
 					topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
 					resultadoFinal(totalJugador,totalCPU)
-					fin=True						
+					break						
 			except(NameError):
 				pass	#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
 		elif(turno == 'CPU')and(int(round(time.time()*100))-tiempoInicio<tiempoPartida):
@@ -356,13 +364,13 @@ def main(config,carga=False):
 				for j in range(cant):#Itero tantas veces como letras deba tener la palabra
 					pos=random.choice(fichas)#Elijo una ficha al azar del atril
 					fichas.remove(pos)#Elimino la posibilidad de elegir la misma ficha en la proxima iteracion.
-					combinacion.append(atrilCPU.getFicha(pos))#Agrego la ficha seleccionada a la lista de combinacion
+					combinacion.append(pos)#Agrego la posicion de la ficha seleccionada a la lista de combinacion
 				palabras.append(combinacion)#Una vez generada la combinacion de fichas, la agrego a la lista de palabras generadas
 			i=0
 			while(i<=len(palabras)-1)and(valida==None):
 				word=''
-				for ficha in palabras[i]:
-					word+=ficha.getLetra().lower()
+				for pos in palabras[i]:
+					word+=atrilCPU.getLetra(pos).lower()
 				if(palabra_Valida(word,nivel)):
 					valida=palabras[i]
 				else:
@@ -374,11 +382,10 @@ def main(config,carga=False):
 				if(acertadas==0):#Si el primer turno del juego corresponde a la CPU o aun no hay fichas colocadas en el tablero
 					orientacion = random.choice(['Horizontal','Vertical'])#Elijo la orientacion de la palabra a poner en el atril
 					pos=(7,7)#La posicion inicial es (7,7)
-					for ficha in valida:
-						tabla.actualizarCasilla(pos[0],pos[1],ficha)
+					for j in valida:
+						tabla.actualizarCasilla(pos[0],pos[1],atrilCPU.getFicha(j))
 						window[pos].update(image_filename=tabla.getImagen(pos[0],pos[1]))
 						datos.append(tabla.getCasilla(pos[0],pos[1]))
-						atrilCPU.quitarFicha(ficha)#Quito la ficha del atril del CPU
 						fichasUsadas+=1	#Aumento la cantidad de fichas utilizadas
 						if(orientacion=='Horizontal'):#Si la posicion elegida fue Horizontal, la sig posicion de la ficha a colocar sera a la derecha.
 							sig=pos[1]+1
@@ -394,11 +401,10 @@ def main(config,carga=False):
 						orientacion='Horizontal'
 					else:	#Si la palabra puede colocarse en horizontal, se elige esa orientacion
 						orientacion='Vertical'
-					for ficha in valida:
-						tabla.actualizarCasilla(pos[0],pos[1],ficha)
+					for j in valida:
+						tabla.actualizarCasilla(pos[0],pos[1],atrilCPU.getFicha(j))
 						window[pos].update(image_filename=tabla.getImagen(pos[0],pos[1]))
 						datos.append(tabla.getCasilla(pos[0],pos[1]))
-						atrilCPU.quitarFicha(ficha)
 						fichasUsadas+=1
 						if(orientacion=='Horizontal'):
 							sig=pos[1]+1
@@ -406,19 +412,35 @@ def main(config,carga=False):
 						elif(orientacion == 'Vertical'):
 							sig=pos[0]+1
 							pos=(sig,pos[1])
-				atrilCPU.completarAtrilCPU(valida)
+				noRepuestas=atrilCPU.completarAtril(valida)
 				puntos = calcularPuntaje(datos)
 				totalCPU+= puntos
 				palabrasCPU.append((word.upper(),puntos))
 				window['LIS1'].update(values=palabrasCPU)
 				window['TOT1'].update(totalCPU)
 				acertadas+=1
+				if(atrilCPU.finalizarAtril()):
+					#Muestro el atril del CPU al jugador.
+					for i in range(7):
+						if(i not in noRepuestas):
+							window[str(i)].update(image_filename=atrilCPU.getImagen(i))
+						else:
+							window[str(i)].update(visible=False)
+					totalJugador-=atrilJugador.puntajeFinal([])
+					totalCPU-=atrilCPU.puntajeFinal(noRepuestas)		
+					topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
+					topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
+					window['TOT1'].update(totalCPU)
+					window['TOT2'].update(totalJugador)
+					resultadoFinal(totalJugador,totalCPU)		
+					break
 				turno='Jugador'
 		elif(int(round(time.time()*100))-tiempoInicio>=tiempoPartida): #Si se termino el tiempo actualizo los rankings y muestro el resultado final
 			topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
 			topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
 			resultadoFinal(totalJugador,totalCPU)
-			fin=True
+			break
+	sg.popup('¡Gracias por Jugar!')
 	window.Close()
 if __name__ == '__main__':
     main()	
