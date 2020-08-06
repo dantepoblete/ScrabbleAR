@@ -1,6 +1,6 @@
 ![logo](/img/LOGO.png)
 
-![](https://img.shields.io/github/license/dantepoblete/ScrabbleAR?style=plastic)
+![](https://img.shields.io/github/license/dantepoblete/ScrabbleAR?style=plastic) ![](https://img.shields.io/static/v1?label=Python&message=3.6.8&color=green&style=plastic) ![](https://img.shields.io/static/v1?label=PySimpleGUI&message=4.19+&color=red&style=plastic) ![](https://img.shields.io/static/v1?label=Pattern&message=3.6&color=yellow&style=plastic)
 # Requisitos
 * [Python 3.6.8](https://www.python.org/downloads/release/python-368/)
 * [PySimpleGUI](https://github.com/PySimpleGUI)
@@ -68,7 +68,7 @@ pip install pattern
   * ### Cambiar Fichas
     ![](/img/CF.png)
    
-   *Si el jugador lo desea puede cambiar las fichas presentadas en su atril por otras dentro de la bolsa. Una vez pulsado*
+    *Si el jugador lo desea puede cambiar las fichas presentadas en su atril por otras dentro de la bolsa. Una vez pulsado*
     *este botón, seleccione las fichas a cambiar y luego vuelva a pulsar el botón para confirmar el cambio.*
   * ### Posponer Partida
     ![](/img/POS.png)
