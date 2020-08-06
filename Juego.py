@@ -189,9 +189,9 @@ def main(config,carga=False):
 	Jugador = [[place(sg.Button(image_filename=atrilJugador.getImagen(i), image_size=(30,30),key = int(i), pad = (0,0)))for i in range(7)]]
 	
 	Botones = [[sg.Button('Validar',image_filename='./img/VAL.png',image_size=(120,27),button_color=('white',background),border_width=0, pad=(0,0), key='val'),
-                sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),tooltip=infoCambio,button_color=('white',background),border_width=0, pad=(0,0), key='cambiar',visible=True),
-                sg.Text('     Tiempo de Partida: 00:00',key='TIME')
-                ]]
+                sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),tooltip=infoCambio,button_color=('white',background),border_width=0, pad=(0,0), key='cambiar',visible=True)],
+                [sg.Button('Ceder Turno',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='ced'), 
+                sg.Text('     Tiempo de Partida: 00:00',key='TIME')]]
               
 	contadorCPU = [[sg.Text(totalCPU, size=(3,1), key='TOT1')]]
 	contadorJugador = [[sg.Text(totalJugador, size=(3,1), key='TOT2')]]
@@ -207,11 +207,11 @@ def main(config,carga=False):
 	else:
 		infoNivel= sg.Text('Nivel ' + nivel.upper(),text_color='LightBlue', tooltip='AYUDA: Solo puede usar adjetivos y verbos')	
  
+	
 	logo = [[sg.Image(filename = './img/MINI.png', size = (128,76), background_color =background,key='MINI')],
 			[infoNivel]]
- 
 	datos= [[sg.Column(logo,justification='center')],[sg.Column(ven2)],[sg.Column(ven)],[sg.Column(Botones2)]]
-	Interfaz = [[sg.Column(CPU)],[sg.Column(tablero),sg.Column(datos)],[sg.Column(Jugador),sg.Column(Botones)]]     
+	Interfaz = [[sg.Column(CPU)],[sg.Column(tablero),sg.Column(datos)],[sg.Column(Jugador),sg.Column(Botones)]]   
 	
 	window = sg.Window('ScrabbleAR').Layout(Interfaz)
 	
@@ -343,6 +343,9 @@ def main(config,carga=False):
 						pickle.dump(backUp,archivo)
 					sg.popup('Datos Guardados')
 					break
+				elif(event== 'ced'):
+					sg.PopupQuickMessage('Pasaste de turno')	
+					turno='CPU'
 				elif(event=='FIN'):
 					topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
 					topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
