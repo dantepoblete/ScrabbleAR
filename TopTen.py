@@ -30,7 +30,10 @@ class Top():
 
 
     def agregarNuevoPuntaje(self,jugador,cant_puntos,nivel):
-        """Agrega al archivo los datos del jugador """
+        """Agrega al archivo los datos del jugador de dos formas:
+            -si el jugador no esta en el topTen se agrega  al archivo.
+            -si el jugador ya esta en el ranking,si su puntaje es 
+             mayor o igual se actualiza su puntaje  y la fecha."""
         puntajes = self.crearArchivo()
         if(len(puntajes) < 10):
             file = open(self.__filepath,"w")
@@ -40,8 +43,19 @@ class Top():
                 "puntaje": cant_puntos,
                 "nivel": nivel,
             }
-            puntajes.append(puntaje)
-            puntajes = sorted(puntajes, key = lambda i: i["puntaje"], reverse = True)
+            ok=False
+            for jug in puntajes:
+                if(ok==False):
+                    if((jug["jugador"] == jugador) and(jug["nivel"]==nivel)):
+                        if(cant_puntos >= jug["puntaje"]):
+                            jug["puntaje"]=cant_puntos
+                            jug["fecha"]=puntaje["fecha"]
+                            ok=True       
+            if(ok==False):
+                 puntajes.append(puntaje)                           
+            
+            Puntajes = sorted(puntajes, key = lambda i: i["puntaje"], reverse = True)
+
             json.dump(puntajes,file,indent=4)               
             file.close()
         else:
@@ -52,7 +66,17 @@ class Top():
                  "puntaje": cant_puntos,
                  "nivel": nivel,
                 }
-            puntajes[-1] = puntaje
+            ok=False
+            for jug in puntajes:
+                 if(ok==False):
+                    if((jug["jugador"]== jugador) and(jug["nivel"]==nivel)):
+                        if(cant_puntos >= jug["puntaje"]):
+                            jug[puntaje]=cant_puntos
+                            jug["fecha"]=puntaje["fecha"]
+                            ok=True       
+            if((ok==False)and(cant_puntos > puntajes[-1]["puntaje"])):                
+                puntajes[-1]=puntaje                       
+            
             puntajes = sorted(puntajes, key = lambda i: i["puntaje"], reverse = True)
             json.dump(puntajes,file,indent=4)
             file.close()
