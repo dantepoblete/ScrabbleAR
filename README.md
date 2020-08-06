@@ -24,8 +24,8 @@ pip install pattern
 * ### Nivel:
   ***Cada nivel posee un diseño de tablero diferente, acorde a la dificultad seleccionada.***
   * **Facil:** *Jugar con adjetivos,sustantivos,verbos*
-  * **Medio:** *Jugar con verbos y sustantivos*
-  * **Dificil:** *Jugar con una categoría al azar*
+  * **Medio:** *Jugar con verbos y adjetivos*
+  * **Dificil:** *Jugar con verbos y adjetivos*
 * ### Configurar Fichas  
   * **Letra:** *Selecciona la letra de la que desees modificar sus parámetros.*
   * **Valor:** *Cambia el valor de la letra seleccionada.*
