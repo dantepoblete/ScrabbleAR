@@ -54,7 +54,7 @@ pip install pattern
  ## Acciones
   * ### Validar
     ![](/img/VAL.png)
-    **Luego de formar una palabra, al pulsar este botón se determinará si es valida (según el nivel). Si resulta valida,
+    **Luego de formar una palabra, al pulsar este botón se determinará si es valida (según el nivel). Si resulta valida,**
     **la palabra formada permanecerá en el tablero y el puntaje correspondiente será asignado al jugador. En caso contrario**
     **las fichas utilizadas serán devueltas al atril.**
   * ### Cambiar Fichas
