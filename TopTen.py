@@ -54,8 +54,7 @@ class Top():
             if(ok==False):
                  puntajes.append(puntaje)                           
             
-            Puntajes = sorted(puntajes, key = lambda i: i["puntaje"], reverse = True)
-
+            puntajes = sorted(puntajes, key = lambda i: i["puntaje"], reverse = True)
             json.dump(puntajes,file,indent=4)               
             file.close()
         else:
@@ -108,7 +107,7 @@ def main():
     ]]
 	panel=mostrarTop("TopNiveles.json")
 	selectNivel = [[sg.Frame('Seleccionar Nivel',niveles)]]
-	topTen = [[sg.Frame('TopTen General',panel)]]
+	topTen = [[sg.Frame('TopTen General',panel)]]#Muestro las puntuaciones del nivel General
 	layout = [[sg.Column(selectNivel)],[sg.Column(topTen)]]
 	menuRanking= sg.Window('TopTen General ScrabbleAR', layout, use_default_focus=False)
 	while True:
