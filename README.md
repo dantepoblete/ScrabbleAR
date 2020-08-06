@@ -1,6 +1,6 @@
 ![logo](/img/LOGO.png)
 
-![](https://img.shields.io/github/license/dantepoblete/ScrabbleAR?style=plastic) ![](https://img.shields.io/static/v1?label=python&message=3.6.8&color=green&style=plastic) ![](https://img.shields.io/static/v1?label=pysimplegui&message=4.19+&color=red&style=plastic) ![](https://img.shields.io/static/v1?label=pattern&message=3.6&color=yellow&style=plastic)
+![](https://img.shields.io/github/license/dantepoblete/ScrabbleAR?style=plastic) ![](https://img.shields.io/static/v1?label=python&message=3.6.8&color=green&style=plastic) ![](https://img.shields.io/static/v1?label=pysimplegui&message=4.19+&color=red&style=plastic) ![](https://img.shields.io/static/v1?label=pattern&message=3.6&color=yellow&style=plastic) ![](https://img.shields.io/static/v1?label=plataforma&message=windows%207/8.1/10%20-%20linux&color=blue&style=plastic)
 ## Requisitos
 * [Python 3.6.8](https://www.python.org/downloads/release/python-368/)
 * [PySimpleGUI](https://github.com/PySimpleGUI)
@@ -14,6 +14,8 @@ pip install pysimplegui
 pip install pattern
 ```
 ## Primeros Pasos
+
+* Para iniciar el juego se debe correr el archivo **ScrabbleAR.py**
 
 ### Menu Principal
 ![](/img/Menu.JPG)
@@ -85,3 +87,11 @@ pip install pattern
  ## Integrantes
  * [Link, Agustín Nicolas.](https://github.com/aguslink97)
  * [Poblete, Dante José.](https://github.com/dantepoblete)
+ ## Recursos
+ * [Python 3.6.8](https://www.python.org/downloads/release/python-368/) - *Lenguaje utilizado*
+ * [PySimpleGUI](https://github.com/PySimpleGUI) - *Interfaz gráfica de usuario empleada.*
+ * [Pattern](https://github.com/clips/pattern) - *Procesamiento de palabras*
+ * **Adobe Photoshop** - *Herramienta empleada para el diseño/creación de las imagenes del juego.*
+ ## Licencia
+ * Este proyecto cuenta con [Licencia GPL 3.0](/LICENSE.md)
+ 
