@@ -1,4 +1,8 @@
 class Ficha():
+	'''La clase representa a una ficha del juego y posee tres atributos:
+	(1)-Letra de la ficha.
+	(2)-Valor de la ficha.
+	(3)-Imagen asociada.'''
 	def __init__(self,letra,valor):
 		self.__letra=letra
 		self.__valor=valor
