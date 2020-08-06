@@ -37,7 +37,7 @@ pip install pattern
   
  ## Atril
 ![](/letras/E.png)![](/letras/S.png)![](/letras/D.png)![](/letras/T.png)![](/letras/A.png)![](/letras/R.png)![](/letras/N.png)
-**Son las fichas que el jugador dispone para utilizar en el tablero. A medida que se van utilizando, son reemplazadas por otras fichas procedentes de la bolsa**
+**Son las fichas que el jugador dispone para utilizar en el tablero. A medida que se van utilizando, son reemplazadas por otras fichas procedentes de la bolsa.**
 **Cada ficha posee un valor numerico que incidirá en el puntaje de la palabra**
  ## Casilleros
   * ![](/img/N.png) **Casillero normal del juego.**
