@@ -75,6 +75,7 @@ pip install pattern
    
     *Si el jugador lo desea puede cambiar las fichas presentadas en su atril por otras dentro de la bolsa. Una vez pulsado*
     *este botón, seleccione las fichas a cambiar y luego vuelva a pulsar el botón para confirmar el cambio.*
+    ***El jugador solo dispone de 3 cambios en toda la partida.***
   * #### Posponer Partida
     ![](/img/POS.png)
     
@@ -84,6 +85,10 @@ pip install pattern
     ![](/img/FIN.png)
     
     *Si el jugador ya no desea continuar con la partida, solo basta con pulsar este botón para* ***finalizar el juego.***
+  * #### Ceder Turno
+    ![](/img/BT2.png)
+    
+    *El jugador le cede su turno a la IA al pulsar este botón.*
  ## Integrantes
  * [Link, Agustín Nicolas.](https://github.com/aguslink97)
  * [Poblete, Dante José.](https://github.com/dantepoblete)
