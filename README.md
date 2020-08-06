@@ -68,4 +68,6 @@ pip install pattern
   * ### Finalizar Partida
     ![](/img/FIN.png)
     **Si el jugador ya no desea continuar con la partida, solo basta con pulsar este botón**
-    
+  ## Integrantes
+  * [Link, Agustín Nicolas.](https://github.com/aguslink97)
+  * [Poblete, Dante José.](https://github.com/dantepoblete)
