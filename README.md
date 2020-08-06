@@ -1,6 +1,6 @@
 ![logo](/img/LOGO.png)
 
-![](https://img.shields.io/github/license/dantepoblete/ScrabbleAR?style=plastic) ![](https://img.shields.io/static/v1?label=python&message=3.6.8&color=green&style=plastic) ![](https://img.shields.io/static/v1?label=pysimplegui&message=4.19+&color=red&style=plastic) ![](https://img.shields.io/static/v1?label=pattern&message=3.6&color=yellow&style=plastic) ![](https://img.shields.io/static/v1?label=plataforma&message=windows%207/8.1/10%20-%20linux&color=blue&style=plastic)
+![](https://img.shields.io/github/license/dantepoblete/ScrabbleAR?style=plastic) ![](https://img.shields.io/static/v1?label=python&message=3.6.8&color=green&style=plastic) ![](https://img.shields.io/static/v1?label=pysimplegui&message=4.19+&color=red&style=plastic) ![](https://img.shields.io/static/v1?label=pattern&message=2.6&color=yellow&style=plastic) ![](https://img.shields.io/static/v1?label=plataforma&message=windows%207/8.1/10%20-%20linux&color=blue&style=plastic)
 ## Requisitos
 * [Python 3.6.8](https://www.python.org/downloads/release/python-368/)
 * [PySimpleGUI](https://github.com/PySimpleGUI)
