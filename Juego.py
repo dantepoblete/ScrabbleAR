@@ -180,7 +180,14 @@ def main(config,carga=False):
 	palabra = []
 	posFichas =[]
 	infoCambio='Le quedan '+str(cambios)+' cambios a utilizar'
-	topGeneral=Top(config.getTopGeneral())	
+	topGeneral=Top(config.getTopGeneral())
+	
+	espaciado = '		        '
+	
+	if(nivel == 'facil'):
+		infoNivel= sg.Text(espaciado+'Nivel '+ nivel.upper(),text_color='LightBlue',tooltip='AYUDA: Solo puede usar adjetivos,sustantivos y verbos')
+	else:
+		infoNivel= sg.Text(espaciado+'Nivel ' + nivel.upper(),text_color='LightBlue', tooltip='AYUDA: Solo puede usar adjetivos y verbos')
     	
 	tablero = [[sg.Button(tooltip=agregarDescripcion(i,j,mainTab), image_filename=tabla.getImagen(i,j), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(15)] for i in range(15)]
 	
@@ -189,9 +196,9 @@ def main(config,carga=False):
 	Jugador = [[place(sg.Button(image_filename=atrilJugador.getImagen(i), image_size=(30,30),key = int(i), pad = (0,0)))for i in range(7)]]
 	
 	Botones = [[sg.Button('Validar',image_filename='./img/VAL.png',image_size=(120,27),button_color=('white',background),border_width=0, pad=(0,0), key='val'),
-                sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),tooltip=infoCambio,button_color=('white',background),border_width=0, pad=(0,0), key='cambiar',visible=True)],
-                [sg.Button('Ceder Turno',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='ced'), 
-                sg.Text('     Tiempo de Partida: 00:00',key='TIME')]]
+                sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),tooltip=infoCambio,button_color=('white',background),border_width=0, pad=(0,0), key='cambiar',visible=True),
+                sg.Text('     Tiempo de Partida: 00:00',key='TIME')],
+                [sg.Button('Ceder Turno',image_filename='./img/BT2.png',image_size=(120,27),button_color=('white',background),border_width=0,pad=(0,0), key='CED'),infoNivel]]
               
 	contadorCPU = [[sg.Text(totalCPU, size=(3,1), key='TOT1')]]
 	contadorJugador = [[sg.Text(totalJugador, size=(3,1), key='TOT2')]]
@@ -201,15 +208,9 @@ def main(config,carga=False):
 	ven = [[sg.Frame('Aciertos de '+nombre,venJugador)],[sg.Frame('Puntaje de '+nombre,contadorJugador)]]
 	Botones2 = [[sg.Button('Posponer Partida',image_filename='./img/POS.png',image_size=(120,27),button_color=('white',background),border_width=0, key='POS')],
 				[sg.Button('Finalizar Partida',image_filename='./img/FIN.png',image_size=(120,27),button_color=('white',background),border_width=0, key='FIN')]
-				]
-	if(nivel == 'facil'):
-		 infoNivel= sg.Text( 'Nivel '+ nivel.upper(),text_color='LightBlue',tooltip='AYUDA: Solo puede usar  adjetivos,sustantivos y verbos')
-	else:
-		infoNivel= sg.Text('Nivel ' + nivel.upper(),text_color='LightBlue', tooltip='AYUDA: Solo puede usar adjetivos y verbos')	
- 
+				] 
 	
-	logo = [[sg.Image(filename = './img/MINI.png', size = (128,76), background_color =background,key='MINI')],
-			[infoNivel]]
+	logo = [[sg.Image(filename = './img/MINI.png', size = (128,76), background_color =background,key='MINI')]]
 	datos= [[sg.Column(logo,justification='center')],[sg.Column(ven2)],[sg.Column(ven)],[sg.Column(Botones2)]]
 	Interfaz = [[sg.Column(CPU)],[sg.Column(tablero),sg.Column(datos)],[sg.Column(Jugador),sg.Column(Botones)]]   
 	
@@ -292,7 +293,8 @@ def main(config,carga=False):
 							window['TOT1'].update(totalCPU)
 							window['TOT2'].update(totalJugador)
 							resultadoFinal(totalJugador,totalCPU)
-							break			
+							break
+						turno='CPU'				
 					else:
 						for i in posFichas:
 							window[i].update(visible=True)
@@ -343,7 +345,7 @@ def main(config,carga=False):
 						pickle.dump(backUp,archivo)
 					sg.popup('Datos Guardados')
 					break
-				elif(event== 'ced'):
+				elif(event== 'CED'):
 					sg.PopupQuickMessage('Pasaste de turno')	
 					turno='CPU'
 				elif(event=='FIN'):
