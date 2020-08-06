@@ -4,8 +4,8 @@ tableros = {'facil':{'posDobleLetra':[(2,2),(4,4),(6,6),(2,12),(4,10),(6,8),(8,6
 				'posTripleLetra':[(1,1),(3,3),(5,5),(5,9),(3,11),(1,13),(9,5),(11,3),(13,1),(9,9),(11,11),(13,13),(3,5),(1,7),(3,9)],
 				'posDoblePalabra':[(5,3),(7,1),(9,3),(5,11),(7,13),(9,11),(11,5),(11,9),(13,7),(0,0),(14,14)],
 				'posTriplePalabra':[(6,2),(8,2),(6,12),(8,12),(2,6),(2,8),(14,0),(0,14)],
-				'posMenosUno':[],
-				'posMenosDos':[],
+				'posMenosUno':[(1,4),(4,13),(7,4),(7,10),(10,1),(13,10)],
+				'posMenosDos':[(1,10),(4,1),(4,7),(10,7),(10,13),(13,4)],
 				'posMenosTres':[],
 				'posInicial':[(7,7)]},
 		'medio':{'posDobleLetra':[(0,4),(4,7),(4,14),(5,4),(5,10),(9,4),(9,10),(10,0),(10,7),(14,10)],
@@ -20,9 +20,9 @@ tableros = {'facil':{'posDobleLetra':[(2,2),(4,4),(6,6),(2,12),(4,10),(6,8),(8,6
 				'posTripleLetra':[(1,13),(13,1)],
 				'posDoblePalabra':[(0,0),(14,14)],
 				'posTriplePalabra':[(1,1),(13,13)],
-				'posMenosUno':[(0,4),(2,2),(2,6),(2,8),(2,12),(4,4),(4,10),(6,2),(6,12),(8,2),(8,12),(10,0),(10,4),(10,10),(12,2),(12,6),(12,8),(12,12),(14,4),(14,10)],
+				'posMenosUno':[(0,4),(2,2),(2,6),(2,8),(2,12),(4,4),(4,10),(6,2),(6,12),(8,2),(8,12),(10,0),(10,4),(10,10),(10,14),(12,2),(12,6),(12,8),(12,12),(14,4),(14,10)],
 				'posMenosDos':[(0,10),(3,3),(3,11),(4,0),(4,6),(4,8),(4,14),(6,4),(6,10),(8,4),(8,10),(10,6),(10,8),(10,4),(11,3),(11,11)],
-				'posMenosTres':[(1,3),(1,5),(1,9),(1,11),(3,1),(3,7),(3,13),(5,1),(5,5),(5,9),(5,13),(7,11),(9,1),(9,5),(9,9),(9,13),(11,1),(11,7),(11,13),(13,3),(13,5),(13,9),(13,11)],
+				'posMenosTres':[(1,3),(1,5),(1,9),(1,11),(3,1),(3,7),(3,13),(5,1),(5,5),(5,9),(5,13),(7,3),(7,11),(9,1),(9,5),(9,9),(9,13),(11,1),(11,7),(11,13),(13,3),(13,5),(13,9),(13,11)],
 				'posInicial':[(7,7)]}
 		}
 fichasDefault = {'A':[1,11],'B':[3,3],'C':[2,4],'D':[2,4],'E':[1,11],'F':[4,2],'G':[2,2],'H':[4,2],'I':[1,6],'J':[6,2],'K':[8,1],
@@ -35,8 +35,7 @@ class Config():
 	'''Esta clase contiene los tres campos configurables con valores predeterminados los cuales son:
 	-Dificultad: Esta establecido con el tablero en dificultad medio.
 	-Fichas: Es un diccionario con la estructura 'Letra':[Valor,Cantidad].
-	-Tiempo de la partida: Esta establecido a 8 minutos de juego.
-	-Cambios: La cantidad de veces que se pueden cambiar las fichas en el juego esta establecido en 3 veces.'''
+	-Tiempo de la partida: Esta establecido a 8 minutos de juego.'''
 	def __init__(self):
 		self.__nivel='medio'
 		self.__tablero=tableros[self.__nivel]

@@ -229,17 +229,17 @@ def main(config,carga=False):
 			window['TIME'].update('     Tiempo de Partida: {:02d}:{:02d}'.format((tiempoActual//100)//60,(tiempoActual//100)%60))
 			try:
 				if(type(event) == tuple):
-					if(fichasUsadas == 0)and(event[0] == 7)and(event[1] == 7)and(clave!=None):
-						posSiguiente.append((8,7))
-						posSiguiente.append((7,8))
-						ponerFicha(event,atrilJugador.getFicha(clave))
-						palabra.append(tabla.getCasilla(event[0],event[1]))
-						posFichas.append(clave)
+					if(fichasUsadas == 0)and(event[0] == 7)and(event[1] == 7)and(clave!=None):#Si es la primer ficha del juego
+						posSiguiente.append((8,7))#La siguiente ficha puede ser puesta en vertical.
+						posSiguiente.append((7,8))#La siguiente ficha puede ser puesta en horizontal.
+						ponerFicha(event,atrilJugador.getFicha(clave))#El tablero es actualizado con la ficha puesta.
+						palabra.append(tabla.getCasilla(event[0],event[1]))#La informacion del casillero es agregada a una lista para ser procesado.
+						posFichas.append(clave)#Guardo la posicion de la ficha en el atril
 						clave = None
-						posActual = event
-						fichasUsadas = fichasUsadas + 1
-					elif(fichasUsadas!=0)and(acertadas == 0)and(clave!=None):
-						if(event in tabla.getDisponibles())and(event in posSiguiente):
+						posActual = event	#La posicion actual es la de la ultima ficha ubicada(esto es asi para controlar la orientación).
+						fichasUsadas = fichasUsadas + 1		#Aumento la cantidad de fichas usadas
+					elif(fichasUsadas!=0)and(acertadas == 0)and(clave!=None): #Si es la segunda ficha en el juego.
+						if(event in tabla.getDisponibles())and(event in posSiguiente):#Si el casillero esta disponible y su ubicacion es consecutiva a la anterior
 							posSiguiente = definirOrientacion(event,posActual)
 							ponerFicha(event,atrilJugador.getFicha(clave))
 							palabra.append(tabla.getCasilla(event[0],event[1]))
@@ -270,9 +270,10 @@ def main(config,carga=False):
 					word = ''
 					pos = []
 					for letra in palabra:
-						word=word+letra.getLetra().lower()
+						word=word+letra.getLetra().lower()#Genero la palabra a partir de las fichas puestas.
 						pos.append(letra.getPos())
 					if(palabra_Valida(word,nivel)):
+						#Completo el atril con nuevas fichas de la bolsa, en caso de no poder completar todas, las faltantes quedan en la lista noRepuestas
 						noRepuestas=atrilJugador.completarAtril(posFichas)
 						puntos = calcularPuntaje(palabra)
 						totalJugador+=puntos
@@ -283,17 +284,17 @@ def main(config,carga=False):
 							window[i].update(image_filename=atrilJugador.getImagen(i))
 							window[i].update(visible=True)
 						acertadas = acertadas + 1
-						if(atrilJugador.finalizarAtril()):
+						if(atrilJugador.finalizarAtril()):#Si se terminaron las fichas de la bolsa del jugador
 							for j in range(7):
-								window[str(j)].update(image_filename=atrilCPU.getImagen(j))
-							totalJugador-=atrilJugador.puntajeFinal(noRepuestas)
-							totCPU-=atrilCPU.puntajeFinal([])					
-							topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
+								window[str(j)].update(image_filename=atrilCPU.getImagen(j))#Muestro las fichas del atrilCPU
+							totalJugador-=atrilJugador.puntajeFinal(noRepuestas)#Al puntaje del jugador le resto el puntaje de las fichas restantes.
+							totalCPU-=atrilCPU.puntajeFinal([])#Al puntaje de la IA le resto el puntaje de las fichas restantes					
+							topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())#Actualizo los Tops
 							topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
 							window['TOT1'].update(totalCPU)
 							window['TOT2'].update(totalJugador)
 							resultadoFinal(totalJugador,totalCPU)
-							break
+							break#Termino el juego
 						turno='CPU'				
 					else:
 						for i in posFichas:
@@ -349,10 +350,16 @@ def main(config,carga=False):
 					sg.PopupQuickMessage('Pasaste de turno')	
 					turno='CPU'
 				elif(event=='FIN'):
+					for j in range(7):
+						window[str(j)].update(image_filename=atrilCPU.getImagen(j))
+					totalJugador-=atrilJugador.puntajeFinal([])
+					totalCPU-=atrilCPU.puntajeFinal([])					
 					topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
 					topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
+					window['TOT1'].update(totalCPU)
+					window['TOT2'].update(totalJugador)
 					resultadoFinal(totalJugador,totalCPU)
-					break						
+					break
 			except(NameError):
 				pass	#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
 		elif(turno == 'CPU')and(int(round(time.time()*100))-tiempoInicio<tiempoPartida):
@@ -441,9 +448,15 @@ def main(config,carga=False):
 					break
 				turno='Jugador'
 		elif(int(round(time.time()*100))-tiempoInicio>=tiempoPartida): #Si se termino el tiempo actualizo los rankings y muestro el resultado final
+			for j in range(7):
+				window[str(j)].update(image_filename=atrilCPU.getImagen(j))#Muestro las fichas del atrilCPU
+			totalJugador-=atrilJugador.puntajeFinal([])#Le resto al puntaje del jugador, el puntaje de las fichas restantes del atril.
+			totalCPU-=atrilCPU.puntajeFinal([])#Le resto al puntaje del CPU, el puntaje de las fichas restantes del atril.					
 			topNivel.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
 			topGeneral.agregarNuevoPuntaje(nombre,totalJugador,nivel.upper())
-			resultadoFinal(totalJugador,totalCPU)
+			window['TOT1'].update(totalCPU)
+			window['TOT2'].update(totalJugador)
+			resultadoFinal(totalJugador,totalCPU)#Informo el resultado de la partida.
 			break
 	sg.popup('¡Gracias por Jugar!')
 	window.Close()
