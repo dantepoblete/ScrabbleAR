@@ -1,4 +1,6 @@
-![](/img/LOGO.png)
+![logo](/img/LOGO.png)
+
+![](https://img.shields.io/github/license/dantepoblete/ScrabbleAR?style=plastic)
 # Requisitos
 * [Python 3.6.8](https://www.python.org/downloads/release/python-368/)
 * [PySimpleGUI](https://github.com/PySimpleGUI)
@@ -41,6 +43,7 @@ pip install pattern
   
  ## Atril
 ![](/letras/E.png)![](/letras/S.png)![](/letras/D.png)![](/letras/T.png)![](/letras/A.png)![](/letras/R.png)![](/letras/N.png)
+
 *Son las fichas que el jugador dispone para utilizar en el tablero. A medida que se van utilizando, son reemplazadas por otras fichas procedentes de la bolsa.*
 ***Cada ficha posee un valor numerico que incidirá en el puntaje de la palabra***
  ## Casilleros
@@ -58,19 +61,23 @@ pip install pattern
  ## Acciones
   * ### Validar
     ![](/img/VAL.png)
+    
     *Luego de formar una palabra, al pulsar este botón se determinará si es valida (según el nivel). Si resulta valida,*
     *la palabra formada permanecerá en el tablero y el puntaje correspondiente será asignado al jugador*.***En caso contrario***
     ***las fichas utilizadas serán devueltas al atril.***
   * ### Cambiar Fichas
     ![](/img/CF.png)
-    *Si el jugador lo desea puede cambiar las fichas presentadas en su atril por otras dentro de la bolsa. Una vez pulsado*
+   
+   *Si el jugador lo desea puede cambiar las fichas presentadas en su atril por otras dentro de la bolsa. Una vez pulsado*
     *este botón, seleccione las fichas a cambiar y luego vuelva a pulsar el botón para confirmar el cambio.*
   * ### Posponer Partida
     ![](/img/POS.png)
+    
     *El jugador puede guardar el estado de la partida actual para ser reanudada posteriormente, al presionar este botón.*
     ***Si ya existe una partida guardada, la misma será sobreescrita***
   * ### Finalizar Partida
     ![](/img/FIN.png)
+    
     *Si el jugador ya no desea continuar con la partida, solo basta con pulsar este botón*
  # Integrantes
  * [Link, Agustín Nicolas.](https://github.com/aguslink97)
