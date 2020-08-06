@@ -147,6 +147,7 @@ def main(config,carga=False):
 			nombre = recover['nombre']
 			topNivel= recover['rankingNivel']
 			tiempoInicio=int(round(time.time()*100))-tiempoActual
+		os.remove(guardado)	
 	else:		
 		turno=random.choice(['CPU','Jugador'])
 		acertadas = 0
