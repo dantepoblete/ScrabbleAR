@@ -1,5 +1,6 @@
 import json
 import PySimpleGUI as sg
+import os
 from time import  strftime
 
 background = sg.LOOK_AND_FEEL_TABLE['DarkBlue']['BACKGROUND']             
@@ -15,6 +16,10 @@ class Top():
         return self.__filepath
 
     def crearArchivo(self):
+        try:
+            os.mkdir('top')
+        except(FileExistsError):
+            pass	
         try:
             #Si el archivo existe
             file = open(self.__filepath,"r")
@@ -105,7 +110,7 @@ def main():
 	sg.Button('Medio',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='MID'),
 	sg.Button('Dificil',image_filename = './img/BT2.png', image_size = (120,27),button_color = ('white',background), border_width = 0, key='HARD'),
     ]]
-	panel=mostrarTop("TopNiveles.json")
+	panel=mostrarTop('./top/TopNiveles.json')
 	selectNivel = [[sg.Frame('Seleccionar Nivel',niveles)]]
 	topTen = [[sg.Frame('TopTen General',panel)]]#Muestro las puntuaciones del nivel General
 	layout = [[sg.Column(selectNivel)],[sg.Column(topTen)]]
@@ -114,21 +119,21 @@ def main():
 		event,values = menuRanking.Read()
 		if event == 'MID':
 			#Creo una ventana con las puntuaciones correspondientes al nivel Medio
-			panelMedio = mostrarTop("TopMedio.json")
+			panelMedio = mostrarTop('./top/TopMedio.json')
 			layoutMed = [[sg.Column(panelMedio)]]
 			winMed = sg.Window('TopTen Dificultad Medio',layoutMed)
 			event,values=winMed.Read()
 			winMed.Close()
 		elif event == 'EASY':
 			#Creo una ventana con las puntuaciones correspondientes al nivel Facil
-			panelFacil = mostrarTop("TopFacil.json")
+			panelFacil = mostrarTop('./top/TopFacil.json')
 			layoutFacil = [[sg.Column(panelFacil)]]
 			winFacil = sg.Window('TopTen Dificultad Facil',layoutFacil)
 			event,values=winFacil.Read()
 			winFacil.Close()
 		elif event == 'HARD':
 			#Creo una ventana con las puntuaciones correspondientes al nivel Dificil
-			panelDif = mostrarTop("TopDificil.json")
+			panelDif = mostrarTop('./top/TopDificil.json')
 			layoutDif = [[sg.Column(panelDif)]]
 			winDif = sg.Window('TopTen Dificultad Dificil',layoutDif)
 			event,values=winDif.Read()
