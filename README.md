@@ -20,6 +20,7 @@ pip install pattern
 ### Menu Principal
 ![](/img/Menu.JPG)
  * **Jugar:** *Empieza una nueva partida, si existe una partida guardada de un juego en progreso, puede elegir continuar.*
+ ***Una partida guardada sólo puede ser continuada una única vez.***
  * **Configuración:** *Modifica los parámetros del juego a tu gusto.*
  * **Puntuaciones:** *Un vistazo a los 10 mejores puntajes del juego, en general y por nivel.*
 
@@ -77,6 +78,15 @@ pip install pattern
     *Si el jugador lo desea puede cambiar las fichas presentadas en su atril por otras dentro de la bolsa. Una vez pulsado*
     *este botón, seleccione las fichas a cambiar y luego vuelva a pulsar el botón para confirmar el cambio.*
     ***El jugador solo dispone de 3 cambios en toda la partida.***
+  * #### Cancelar Jugada
+    ![](/img/CAN.png)
+   
+    *Al presionar este botón, las fichas sin validar puestas por el jugador en el tablero son devueltas al atril del mismo, para poder ser reutilizadas*
+    *e intentar formar una palabra diferente.* 
+  * #### Ceder Turno
+    ![](/img/BT2.png)
+    
+    *El jugador le cede su turno a la IA al pulsar este botón.*  
   * #### Posponer Partida
     ![](/img/POS.png)
     
@@ -86,10 +96,7 @@ pip install pattern
     ![](/img/FIN.png)
     
     *Si el jugador ya no desea continuar con la partida, solo basta con pulsar este botón para* ***finalizar el juego.***
-  * #### Ceder Turno
-    ![](/img/BT2.png)
     
-    *El jugador le cede su turno a la IA al pulsar este botón.*
  ## Integrantes
  * [Link, Agustín Nicolas.](https://github.com/aguslink97)
  * [Poblete, Dante José.](https://github.com/dantepoblete)
