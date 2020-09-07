@@ -1,8 +1,8 @@
 import PySimpleGUI as sg
-import Juego as Game
-import Configuracion as Configuracion
-from Configuracion import Config
-import TopTen as Top
+import functs.Juego as Game
+import objetos.Configuracion as Configuracion
+from objetos.Configuracion import Config
+import objetos.TopTen as Top
 import webbrowser
 
 sg.change_look_and_feel('LightBlue')
