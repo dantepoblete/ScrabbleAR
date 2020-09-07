@@ -1,5 +1,5 @@
 import random
-from Ficha import Ficha
+from objetos.Ficha import Ficha
 
 class Bolsa:   
      def __init__(self,dic):
