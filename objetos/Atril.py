@@ -1,5 +1,5 @@
-from Bolsa import Bolsa
-from Ficha import Ficha
+from objetos.Bolsa import Bolsa
+from objetos.Ficha import Ficha
 
 class Atril:
 	def __init__(self,dic):
