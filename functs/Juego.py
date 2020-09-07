@@ -1,8 +1,8 @@
 import PySimpleGUI as sg
-from Atril import Atril
-from BackEnd import BackEnd
-from palabra_Valida import clasificar, palabra_Valida
-from TopTen import Top
+from objetos.Atril import Atril
+from objetos.BackEnd import BackEnd
+from functs.palabra_Valida import clasificar, palabra_Valida
+from objetos.TopTen import Top
 import random
 import time
 import os
@@ -199,7 +199,8 @@ def main(config,carga=False):
 	Botones = [[sg.Button('Validar',image_filename='./img/VAL.png',image_size=(120,27),button_color=('white',background),border_width=0, pad=(0,0), key='val'),
                 sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),tooltip=infoCambio,button_color=('white',background),border_width=0, pad=(0,0), key='cambiar',visible=True),
                 sg.Text('     Tiempo de Partida: 00:00',key='TIME')],
-                [sg.Button('Ceder Turno',image_filename='./img/BT2.png',image_size=(120,27),button_color=('white',background),border_width=0,pad=(0,0), key='CED'),infoNivel]]
+                [sg.Button('Ceder Turno',image_filename='./img/BT2.png',image_size=(120,27),button_color=('white',background),border_width=0,pad=(0,0), key='CED'),
+                sg.Button('Cancelar Jugada',image_filename='./img/CAN.png',image_size=(120,27),button_color=('white',background),border_width=0,pad=(0,0), key='CAN')]]
               
 	contadorCPU = [[sg.Text(totalCPU, size=(3,1), key='TOT1')]]
 	contadorJugador = [[sg.Text(totalJugador, size=(3,1), key='TOT2')]]
@@ -308,30 +309,32 @@ def main(config,carga=False):
 					palabra = []
 					posFichas=[]
 				elif(event =='cambiar')and(cambios>0):
-					sg.PopupQuickMessage('Seleccione las fichas a cambiar,confirme con el boton Cambiar Fichas')
-					elegidas=[]
-					ok=True
-					while(ok == True):
-						clave,values=window.read()
-						if(type(clave) == int):
-							if(clave in elegidas):
-								sg.PopupQuickMessage('Ya se agrego')
-							else:
-								elegidas.append(clave)
-						elif(clave=='cambiar'):
-							ok=False
-						elif(type(clave)!=int)and(clave!='cambiar'):
-							print(type(clave))
-							sg.PopupQuickMessage('Seleccione una ficha válida')	
-					atrilJugador.cambiarFichas(elegidas)
-					for i in elegidas:
-						window[i].update(image_filename=atrilJugador.getImagen(i))
-						window[i].update(visible=True)	
-					cambios=cambios-1
-					window['cambiar'].SetTooltip('Le quedan '+str(cambios)+' cambios a utilizar')
-					if(cambios == 0): #Si el jugador se queda sin cambios de fichas
-						window['cambiar'].SetTooltip('Ya no posee cambios a utilizar')
-					turno='CPU'
+					if(len(palabra) != 0):
+						sg.PopupQuickMessage('Aún posee fichas en juego')
+					else:	
+						sg.PopupQuickMessage('Seleccione las fichas a cambiar,confirme con el boton Cambiar Fichas')
+						elegidas=[]
+						ok=True
+						while(ok == True):
+							clave,values=window.read()
+							if(type(clave) == int):
+								if(clave in elegidas):
+									sg.PopupQuickMessage('Ya se agrego')
+								else:
+									elegidas.append(clave)
+							elif(clave=='cambiar'):
+								ok=False
+							elif(type(clave)!=int)and(clave!='cambiar'):
+								sg.PopupQuickMessage('Seleccione una ficha válida')	
+						atrilJugador.cambiarFichas(elegidas)
+						for i in elegidas:
+							window[i].update(image_filename=atrilJugador.getImagen(i))
+							window[i].update(visible=True)	
+						cambios=cambios-1
+						window['cambiar'].SetTooltip('Le quedan '+str(cambios)+' cambios a utilizar')
+						if(cambios == 0): #Si el jugador se queda sin cambios de fichas
+							window['cambiar'].SetTooltip('Ya no posee cambios a utilizar')
+						turno='CPU'
 				elif(event=='POS'):
 					try:
 						os.mkdir('save')
@@ -348,8 +351,11 @@ def main(config,carga=False):
 					sg.popup('Datos Guardados')
 					break
 				elif(event== 'CED'):
-					sg.PopupQuickMessage('Pasaste de turno')	
-					turno='CPU'
+					if(len(palabra) != 0):
+						sg.PopupQuickMessage('Aún posee fichas en juego')
+					else:	
+						sg.PopupQuickMessage('Pasaste de turno')	
+						turno='CPU'
 				elif(event=='FIN'):
 					for j in range(7):
 						window[str(j)].update(image_filename=atrilCPU.getImagen(j))
@@ -361,6 +367,17 @@ def main(config,carga=False):
 					window['TOT2'].update(totalJugador)
 					resultadoFinal(totalJugador,totalCPU)
 					break
+				elif(event == 'CAN'):
+					pos = [letra.getPos() for letra in palabra]
+					for i in posFichas:
+						window[i].update(visible=True)
+					for event in pos:
+						tabla.restaurarCasillero(event[0],event[1])
+						window[event].update(image_filename=tabla.getImagen(event[0],event[1]))
+					fichasUsadas = fichasUsadas - len(palabra)
+					posSiguiente = []
+					palabra = []
+					posFichas=[]
 			except(NameError):
 				pass	#Si el jugador hace click en el tablero antes de seleccionar una ficha, el programa no se cierra.
 		elif(turno == 'CPU')and(int(round(time.time()*100))-tiempoInicio<tiempoPartida):
@@ -462,4 +479,4 @@ def main(config,carga=False):
 	sg.popup('¡Gracias por Jugar!')
 	window.Close()
 if __name__ == '__main__':
-    main()	
+    main()
