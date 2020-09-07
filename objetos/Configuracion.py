@@ -29,7 +29,7 @@ fichasDefault = {'A':[1,11],'B':[3,3],'C':[2,4],'D':[2,4],'E':[1,11],'F':[4,2],'
 					   'L':[1,4],'LL':[8,1],'M':[3,3],'N':[1,5],'Ñ':[8,1],'O':[1,8],'P':[3,2],'Q':[8,1],'R':[1,4],'RR':[8,1],'S':[1,7],
 					   'T':[1,4],'U':[1,6],'V':[4,2],'W':[8,1],'X':[8,1],'Y':[4,1],'Z':[10,1]}
 
-ranking={'facil' : ("TopFacil.json"),'medio':("TopMedio.json"),'dificil':("TopDificil.json"),'general':("TopNiveles.json")}
+ranking={'facil' :'./top/TopFacil.json' ,'medio':'./top/TopMedio.json', 'dificil': './top/TopDificil.json' ,'general':'./top/TopNiveles.json'}
 			 
 class Config():
 	'''Esta clase contiene los tres campos configurables con valores predeterminados los cuales son:
