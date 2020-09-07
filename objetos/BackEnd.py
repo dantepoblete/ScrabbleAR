@@ -1,4 +1,4 @@
-from Casillero import Casillero
+from objetos.Casillero import Casillero
 
 def asignarTipo(i,j,tab):
 	if((i,j)in tab['posDobleLetra']):
