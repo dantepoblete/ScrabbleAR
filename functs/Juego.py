@@ -183,12 +183,10 @@ def main(config,carga=False):
 	infoCambio='Le quedan '+str(cambios)+' cambios a utilizar'
 	topGeneral=Top(config.getTopGeneral())
 	
-	espaciado = '		        '
-	
 	if(nivel == 'facil'):
-		infoNivel= sg.Text(espaciado+'Nivel '+ nivel.upper(),text_color='LightBlue',tooltip='AYUDA: Solo puede usar adjetivos,sustantivos y verbos')
+		infoNivel= sg.Text('     Nivel '+ nivel.upper(),text_color='LightBlue',tooltip='AYUDA: Solo puede usar adjetivos,sustantivos y verbos')
 	else:
-		infoNivel= sg.Text(espaciado+'Nivel ' + nivel.upper(),text_color='LightBlue', tooltip='AYUDA: Solo puede usar adjetivos y verbos')
+		infoNivel= sg.Text('     Nivel ' + nivel.upper(),text_color='LightBlue', tooltip='AYUDA: Solo puede usar adjetivos y verbos')
     	
 	tablero = [[sg.Button(tooltip=agregarDescripcion(i,j,mainTab), image_filename=tabla.getImagen(i,j), key=(i,j), image_size=(30,30), pad=(0,0)) for j in range(15)] for i in range(15)]
 	
@@ -200,7 +198,8 @@ def main(config,carga=False):
                 sg.Button('Cambiar Fichas',image_filename='./img/CF.png',image_size=(120,27),tooltip=infoCambio,button_color=('white',background),border_width=0, pad=(0,0), key='cambiar',visible=True),
                 sg.Text('     Tiempo de Partida: 00:00',key='TIME')],
                 [sg.Button('Ceder Turno',image_filename='./img/BT2.png',image_size=(120,27),button_color=('white',background),border_width=0,pad=(0,0), key='CED'),
-                sg.Button('Cancelar Jugada',image_filename='./img/CAN.png',image_size=(120,27),button_color=('white',background),border_width=0,pad=(0,0), key='CAN')]]
+                sg.Button('Cancelar Jugada',image_filename='./img/CAN.png',image_size=(120,27),button_color=('white',background),border_width=0,pad=(0,0), key='CAN'),
+                infoNivel]]
               
 	contadorCPU = [[sg.Text(totalCPU, size=(3,1), key='TOT1')]]
 	contadorJugador = [[sg.Text(totalJugador, size=(3,1), key='TOT2')]]
